@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bitrix-frontend-leads-history
+    container_name: bitrix-frontend-search-deals
     restart: always
     ports:
       - '3300:8080'
