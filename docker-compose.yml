@@ -6,4 +6,4 @@ services:
     container_name: bitrix-frontend-search-deals
     restart: always
     ports:
-      - '3300:8080'
+      - '127.0.0.1:3300:8080'
