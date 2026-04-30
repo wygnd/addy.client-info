@@ -1,0 +1,12 @@
+@import "tailwindcss" theme(static);
+@import "@bitrix24/b24ui-nuxt";
+
+
+@theme static {
+    --ui-container: 80rem;
+}
+
+main {
+    padding: 80px 0;
+    min-height: 200px
+}
