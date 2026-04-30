@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from "vue";
-import {LoggerInterface, SdkError} from "@bitrix24/b24jssdk";
-import {B24User, useBitrixStore} from "../store/bitrix-store.ts";
+import { onMounted, onUnmounted, ref } from "vue";
+import { LoggerInterface, SdkError } from "@bitrix24/b24jssdk";
+import { B24User, useBitrixStore } from "../store/bitrix-store.ts";
 import SearchDeals from "./SearchDeals.vue";
 
 const bitrixStore = useBitrixStore();
@@ -34,7 +34,7 @@ onMounted(async () => {
       loggerType = "warning";
     }
 
-    await bitrixStore.logger[loggerType](messageError, {error: e});
+    await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 });
 
@@ -45,8 +45,16 @@ onUnmounted(() => {
 
 <template>
   <div
-      class="lg:px-8 py-10 flex flex-col items-start sm:items-center justify-center gap-[20px]"
+    class="lg:px-8 py-10 flex flex-col items-start sm:items-center justify-center gap-[20px]"
   >
-    <SearchDeals/>
+    <SearchDeals v-if="bitrixStore.isInit" />
+    <B24Error
+      v-else
+      :clear="false"
+      :error="{
+        statusCode: 403,
+        statusMessage: 'Страница не найдена',
+      }"
+    />
   </div>
 </template>
