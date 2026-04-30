@@ -6,4 +6,4 @@ services:
     container_name: bitrix-frontend-leads-history
     restart: always
     ports:
-      - '3200:8080'
+      - '3300:8080'
