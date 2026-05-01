@@ -173,7 +173,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         return [];
       }
 
-      const result = await $bx24.actions.v2.callList.make<B24Deal>({
+      const result = await $bx24.actions.v2.callList.make({
         method: "crm.item.list",
         params: {
           entityTypeId: 2,
@@ -198,7 +198,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         return [];
       }
 
-      return data;
+      return data as B24Deal[];
     } catch (error) {
       $logger.error("Ошибка получения данных", { error });
       return [];
