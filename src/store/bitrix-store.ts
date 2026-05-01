@@ -178,7 +178,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         params: {
           entityTypeId: 2,
           filter: {
-            UF_CRM_6471ECDCA1B61: `%${phone}%`,
+            ufCrm_6471ECDCA1B61: `%${phone}%`,
           },
           start: 0,
         },
