@@ -23,10 +23,20 @@ const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
   deals.value = await bitrixStore.methods.findDealsByPhone(val);
 
   loading.value = false;
-}, 800);
+}, 1000);
 
 const clearPhone = (value: string): string => {
-  return value.replace(/[+()\- ]/gi, "");
+  let val = value.replace(/[+()\- ]/gi, "");
+
+  if (val.startsWith("+")) {
+    val = val.substring(1, val.length);
+  }
+
+  if (val.startsWith("7")) {
+    val = val.substring(1, val.length);
+  }
+
+  return val;
 };
 </script>
 
