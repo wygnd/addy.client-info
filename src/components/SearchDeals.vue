@@ -45,6 +45,9 @@ const clearPhone = (value: string): string => {
         <li v-for="deal in deals" :key="deal.id">{{ deal.title }}</li>
       </ul>
     </div>
+    <div v-else>
+      <ProseH4> Сделок не найдено: </ProseH4>
+    </div>
   </div>
 </template>
 

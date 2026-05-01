@@ -168,36 +168,41 @@ export const useBitrixStore = defineStore("bitrix24", () => {
   };
 
   const findDealsByPhone = async (phone: string): Promise<B24Deal[]> => {
-    if (!$bx24) {
+    try {
+      if (!$bx24) {
+        return [];
+      }
+
+      const result = await $bx24.actions.v2.callList.make<B24Deal>({
+        method: "crm.item.list",
+        params: {
+          entityTypeId: 2,
+          filter: {
+            "=%UF_CRM_6471ECDCA1B61": `%${phone}%`,
+          },
+          start: 0,
+        },
+        customKeyForResult: "items",
+        requestId: $bx24.auth.getUniq("currentUser"),
+      });
+
+      if (!result.isSuccess) {
+        $logger.error("Ошибка запроса", { errors: result.getErrorMessages() });
+        return [];
+      }
+
+      const data = await result.getData();
+
+      if (!data) {
+        $logger.warning("Не удалось получить данные");
+        return [];
+      }
+
+      return data;
+    } catch (error) {
+      $logger.error("Ошибка получения данных", { error });
       return [];
     }
-
-    const result = await $bx24.actions.v3.callList.make<B24Deal>({
-      method: "crm.item.list",
-      params: {
-        entityTypeId: 2,
-        filter: [
-          'UF_CRM_6471ECDCA1B61', '=', `%${phone}%`
-        ],
-        start: 0,
-      },
-      customKeyForResult: "items",
-      requestId: $bx24.auth.getUniq("currentUser"),
-    });
-
-    if (!result.isSuccess) {
-      $logger.error("Ошибка запроса", { errors: result.getErrorMessages() });
-      return [];
-    }
-
-    const data = await result.getData();
-
-    if (!data) {
-      $logger.warning("Не удалось получить данные");
-      return [];
-    }
-
-    return data;
   };
 
   return {
