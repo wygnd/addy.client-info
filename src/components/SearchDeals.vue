@@ -15,6 +15,11 @@ const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
   loading.value = true;
   const val = clearPhone(value as string);
 
+  if (!val) {
+    loading.value = false;
+    return;
+  }
+
   deals.value = await bitrixStore.methods.findDealsByPhone(val);
 
   loading.value = false;
