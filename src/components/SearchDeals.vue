@@ -8,7 +8,7 @@ import { B24Deal, useBitrixStore } from "../store/bitrix-store.ts";
 const bitrixStore = useBitrixStore();
 
 const input = ref<string>("");
-const deals = ref<B24Deal[]>([]);
+const deals = ref<B24Deal[] | null>(null);
 const loading = ref<boolean>(false);
 
 const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
@@ -39,14 +39,18 @@ const clearPhone = (value: string): string => {
       :loading="loading"
       @update:model-value="debouncedChangeInput"
     />
-    <div v-if="deals.length > 0">
-      <ProseH4> Найденные сделки: </ProseH4>
-      <ul>
-        <li v-for="deal in deals" :key="deal.id">{{ deal.title }}</li>
-      </ul>
+    <div v-if="deals && deals.length > 0" class="mt-5">
+      <ProseH4 class="mb-2"> Найденные сделки: </ProseH4>
+      <ol>
+        <li v-for="deal in deals" :key="deal.id">
+          <B24Link type="button" @click="bitrixStore.methods.openDeal(deal.id)">
+            {{ deal.title }}
+          </B24Link>
+        </li>
+      </ol>
     </div>
-    <div v-else>
-      <ProseH4> Сделок не найдено: </ProseH4>
+    <div v-else-if="Array.isArray(deals)" class="mt-5">
+      <ProseH4 class="mb-2"> Сделок не найдено: </ProseH4>
     </div>
   </div>
 </template>

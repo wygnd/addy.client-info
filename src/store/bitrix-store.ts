@@ -18,6 +18,8 @@ export interface B24User {
 export interface B24Deal {
   id: string;
   title: string;
+  assignedById: string;
+
 }
 
 export const useBitrixStore = defineStore("bitrix24", () => {
