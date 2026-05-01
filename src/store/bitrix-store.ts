@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import {
   B24Frame,
+  EnumCrmEntityTypeId,
   initializeB24Frame,
   LoggerFactory,
 } from "@bitrix24/b24jssdk";
@@ -176,12 +177,14 @@ export const useBitrixStore = defineStore("bitrix24", () => {
       const result = await $bx24.actions.v2.callList.make({
         method: "crm.item.list",
         params: {
-          entityTypeId: 2,
+          entityTypeId: EnumCrmEntityTypeId.deal,
           filter: {
             ufCrm_6471ECDCA1B61: `%${phone}%`,
           },
+          select: ["id", "title", "assignedById", "ufCrm_6471ECDCA1B61"],
           start: 0,
         },
+        idKey: "id",
         customKeyForResult: "items",
         requestId: $bx24.auth.getUniq("currentUser"),
       });
