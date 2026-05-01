@@ -1,26 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { LoggerInterface, SdkError } from "@bitrix24/b24jssdk";
-import { B24User, useBitrixStore } from "../store/bitrix-store.ts";
+import { useBitrixStore } from "../store/bitrix-store.ts";
 import SearchDeals from "./SearchDeals.vue";
 
 const bitrixStore = useBitrixStore();
-const currentUser = ref<B24User | null>(null);
-
-const checkAccessUser = (userId: string): boolean => {
-  const accessedUserList = import.meta.env.VITE_API_USER_IDS.split(",");
-
-  return accessedUserList.includes(userId);
-};
 
 onMounted(async () => {
   try {
     await bitrixStore.init();
-    const user = await bitrixStore.methods.getCurrentUser();
-
-    if (user) {
-      currentUser.value = user;
-    }
   } catch (e) {
     let messageError = "Неизвестная ошибка";
     let loggerType: keyof LoggerInterface = "error";

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-import {useBitrixStore} from "../store/bitrix-store.ts";
+import { useBitrixStore } from "../store/bitrix-store.ts";
 
 const bitrixStore = useBitrixStore();
 </script>
@@ -15,18 +14,17 @@ const bitrixStore = useBitrixStore();
     <template #right>
       <div class="flex gap-2.5">
         <B24Badge
-            v-if="bitrixStore.isInit"
-            label="Подключен"
-            color="air-primary"
-            size="xl"
+          v-if="bitrixStore.isInit"
+          label="Подключен"
+          color="air-primary"
+          size="xl"
         />
         <B24Badge
-            v-else
-            label="Не подключен"
-            color="air-primary-alert"
-            size="xl"
+          v-else
+          label="Не подключен"
+          color="air-primary-alert"
+          size="xl"
         />
-
       </div>
     </template>
   </B24Footer>
