@@ -45,20 +45,44 @@ const parsePhone = (value: string): string[] => {
   // 9999999999
   args.push(match[0]);
 
-  // 999 999-99-99
-  args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
+  if (match.length >= 3) {
+    // 999 999
+    args.push(`${match[1]} ${match[2]}`);
 
-  // (999) 999-99-99
-  args.push(`(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`);
+    // (999) 999
+    args.push(`(${match[1]}) ${match[2]}`);
+  }
 
-  // (999) 999 99-99
-  args.push(`(${match[1]}) ${match[2]} ${match[3]}-${match[4]}`);
+  if (match.length >= 4) {
+    // 999 999 99
+    args.push(`${match[1]} ${match[2]} ${match[3]}`);
 
-  // (999) 999 99 99
-  args.push(`(${match[1]}) ${match[2]} ${match[3]} ${match[4]}`);
+    // 999 999-99
+    args.push(`${match[1]} ${match[2]}-${match[3]}`);
 
-  // 999 999 99 99
-  args.push(`${match[1]} ${match[2]} ${match[3]} ${match[4]}`);
+    // (999) 999-99
+    args.push(`(${match[1]}) ${match[2]}-${match[3]}`);
+
+    // (999) 999 99
+    args.push(`(${match[1]}) ${match[2]} ${match[3]}`);
+  }
+
+  if (match.length === 5) {
+    // 999 999-99-99
+    args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
+
+    // (999) 999-99-99
+    args.push(`(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`);
+
+    // (999) 999 99-99
+    args.push(`(${match[1]}) ${match[2]} ${match[3]}-${match[4]}`);
+
+    // (999) 999 99 99
+    args.push(`(${match[1]}) ${match[2]} ${match[3]} ${match[4]}`);
+
+    // 999 999 99 99
+    args.push(`${match[1]} ${match[2]} ${match[3]} ${match[4]}`);
+  }
 
   return args;
 };
