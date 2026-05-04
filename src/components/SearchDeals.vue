@@ -67,7 +67,7 @@ const parsePhone = (value: string): string[] => {
     args.push(`(${match[1]}) ${match[2]} ${match[3]}`);
   }
 
-  if (match.length === 5) {
+  if (match.length >= 5) {
     // 999 999-99-99
     args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
 

@@ -222,6 +222,11 @@ export const useBitrixStore = defineStore("bitrix24", () => {
 
       const data = await result.getData();
 
+      await $logger.debug("Проверка данных", {
+        commands,
+        data,
+      });
+
       if (!data) {
         $logger.warning("Не удалось получить данные");
         return [];
