@@ -38,12 +38,12 @@ const parsePhone = (value: string): string[] => {
 
   const match = cleanedPhoneNumber.match(/(\d{3})(\d{3})(\d{2})(\d{2})$/);
 
-  // 9999999999
-  args.push(match[0]);
-
   if (!match) {
     return args;
   }
+
+  // 9999999999
+  args.push(match[0]);
 
   // 999 999-99-99
   args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);

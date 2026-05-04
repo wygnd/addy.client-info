@@ -206,7 +206,9 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         });
       });
 
-      const result = await $bx24.actions.v2.batchByChunk.make({
+      const result = await $bx24.actions.v2.batchByChunk.make<{
+        items: B24Deal[];
+      }>({
         calls: commands,
         options: {
           requestId: $bx24.auth.getUniq("currentUser"),
@@ -227,7 +229,29 @@ export const useBitrixStore = defineStore("bitrix24", () => {
 
       await $logger.debug("Проверка данных", data);
 
-      return [];
+      if (data.length === 0) {
+        return [];
+      }
+
+      const deals: B24Deal[] = [];
+      const handledDeals = new Set<string>();
+
+      data.forEach((deal) => {
+        if (deal.items.length === 0) {
+          return;
+        }
+
+        deal.items.forEach((d) => {
+          if (handledDeals.has(d.id)) {
+            return;
+          }
+
+          deals.push(d);
+          handledDeals.add(d.id);
+        });
+      });
+
+      return deals;
     } catch (error) {
       $logger.error("Ошибка получения данных", { error });
       return [];
