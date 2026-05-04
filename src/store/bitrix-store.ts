@@ -258,6 +258,14 @@ export const useBitrixStore = defineStore("bitrix24", () => {
     }
   };
 
+  const generateDealUrl = (id: string): string => {
+    if (!$bx24) {
+      return "";
+    }
+
+    return $bx24.slider.getUrl(`/crm/deal/details/${id}/`).toString();
+  };
+
   return {
     init,
     destroy,
@@ -272,6 +280,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
       formatUserName,
       getCurrentUser,
       findDealsByPhone,
+      generateDealUrl,
     },
   };
 });
