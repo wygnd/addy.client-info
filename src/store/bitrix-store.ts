@@ -227,8 +227,6 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         return [];
       }
 
-      await $logger.debug("Проверка данных", data);
-
       if (data.length === 0) {
         return [];
       }

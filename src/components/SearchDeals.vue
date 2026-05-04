@@ -3,18 +3,12 @@ import { ref } from "vue";
 import CrmSearchIcon from "@bitrix24/b24icons-vue/crm/CrmSearchIcon";
 import { vMaska } from "maska/vue";
 import { useDebounceFn } from "@vueuse/core";
-import { useBitrixStore } from "../store/bitrix-store.ts";
-
-interface IB24DealItem {
-  name: string;
-  description?: string;
-  to: string;
-}
+import { B24Deal, useBitrixStore } from "../store/bitrix-store.ts";
 
 const bitrixStore = useBitrixStore();
 
 const input = ref<string>("");
-const deals = ref<IB24DealItem[] | null>(null);
+const deals = ref<B24Deal[] | null>(null);
 const loading = ref<boolean>(false);
 const details = ref<string>("");
 
@@ -28,13 +22,7 @@ const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
     return;
   }
 
-  const items = await bitrixStore.methods.findDealsByPhone(parsePhone(val));
-
-  deals.value = items.map((i) => ({
-    name: `#${i.id}`,
-    description: i.title,
-    to: bitrixStore.methods.generateDealUrl(i.id),
-  }));
+  deals.value = await bitrixStore.methods.findDealsByPhone(parsePhone(val));
 
   loading.value = false;
   details.value = "";
@@ -94,23 +82,13 @@ const parsePhone = (value: string): string[] => {
     </B24FormField>
     <div v-if="deals && deals.length > 0" class="mt-5">
       <ProseH4 class="mb-2 text-center"> Найденные сделки: </ProseH4>
-      <B24PageList>
-        <B24PageCard
-          v-for="(deal, index) in deals"
-          :key="index"
-          variant="plain"
-          :to="deal.to"
-        >
-          <template #body>
-            <B24User
-              :name="deal.name"
-              :description="deal.description"
-              size="xl"
-              class="relative"
-            />
-          </template>
-        </B24PageCard>
-      </B24PageList>
+      <ol>
+        <li v-for="deal in deals" :key="deal.id">
+          <B24Link type="button" @click="bitrixStore.methods.openDeal(deal.id)">
+            {{ deal.title }}
+          </B24Link>
+        </li>
+      </ol>
     </div>
     <div v-else-if="Array.isArray(deals)" class="mt-5">
       <ProseH4 class="mb-2"> Ничего не найдено </ProseH4>
