@@ -14,32 +14,53 @@ const details = ref<string>("");
 
 const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
   loading.value = true;
-  const val = clearPhone(value as string);
+  const val = value as string;
 
-  if (!val) {
+  if (!val || val.length < 6) {
     details.value = "Необходимо заполнить поле";
     loading.value = false;
     return;
   }
 
-  deals.value = await bitrixStore.methods.findDealsByPhone(val);
+  deals.value = await bitrixStore.methods.findDealsByPhone(parsePhone(val));
 
   loading.value = false;
   details.value = "";
 }, 1000);
 
-const clearPhone = (value: string): string => {
-  let val = value.replace(/[+()\- ]/gi, "");
+const parsePhone = (value: string): string[] => {
+  const args = [value];
+  const cleanedPhoneNumber = value.replace(/\D/g, "");
 
-  if (val.startsWith("+")) {
-    val = val.substring(1, val.length);
+  if (!cleanedPhoneNumber) {
+    return args;
   }
 
-  if (val.startsWith("7")) {
-    val = val.substring(1, val.length);
+  const match = cleanedPhoneNumber.match(/(\d{3})(\d{3})(\d{2})(\d{2})$/);
+
+  // 9999999999
+  args.push(match[0]);
+
+  if (!match) {
+    return args;
   }
 
-  return val;
+  // 999 999-99-99
+  args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
+
+  // (999) 999-99-99
+  args.push(`(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`);
+
+  // (999) 999 99-99
+  args.push(`(${match[1]}) ${match[2]} ${match[3]}-${match[4]}`);
+
+  // (999) 999 99 99
+  args.push(`(${match[1]}) ${match[2]} ${match[3]} ${match[4]}`);
+
+  // 999 999 99 99
+  args.push(`${match[1]} ${match[2]} ${match[3]} ${match[4]}`);
+
+  return args;
 };
 </script>
 

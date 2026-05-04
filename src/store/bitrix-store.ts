@@ -19,7 +19,12 @@ export interface B24Deal {
   id: string;
   title: string;
   assignedById: string;
+  ufCrm_6471ECDCA1B61: string | null;
+}
 
+export interface B24BatchCommand {
+  method: string;
+  params: Record<string, unknown>;
 }
 
 export const useBitrixStore = defineStore("bitrix24", () => {
@@ -170,25 +175,42 @@ export const useBitrixStore = defineStore("bitrix24", () => {
     return data.result as B24User;
   };
 
-  const findDealsByPhone = async (phone: string): Promise<B24Deal[]> => {
+  const findDealsByPhone = async (
+    phone: string | string[],
+  ): Promise<B24Deal[]> => {
     try {
       if (!$bx24) {
         return [];
       }
 
-      const result = await $bx24.actions.v2.callList.make({
-        method: "crm.item.list",
-        params: {
-          entityTypeId: EnumCrmEntityTypeId.deal,
-          filter: {
-            ufCrm_6471ECDCA1B61: `%${phone}%`,
+      let phoneSearch: string[];
+
+      if (Array.isArray(phone)) {
+        phoneSearch = phone.map((p) => `%${p}%`);
+      } else {
+        phoneSearch = [`%${phone}%`];
+      }
+
+      const commands: B24BatchCommand[] = [];
+
+      phoneSearch.forEach((phone) => {
+        commands.push({
+          method: "crm.item.list",
+          params: {
+            entityTypeId: EnumCrmEntityTypeId.deal,
+            filter: {
+              ufCrm_6471ECDCA1B61: `%${phone}%`,
+            },
+            select: ["id", "title", "ufCrm_6471ECDCA1B61"],
           },
-          select: ["id", "title", "assignedById", "ufCrm_6471ECDCA1B61"],
-          start: 0,
+        });
+      });
+
+      const result = await $bx24.actions.v2.batchByChunk.make({
+        calls: commands,
+        options: {
+          requestId: $bx24.auth.getUniq("currentUser"),
         },
-        idKey: "id",
-        customKeyForResult: "items",
-        requestId: $bx24.auth.getUniq("currentUser"),
       });
 
       if (!result.isSuccess) {
@@ -203,7 +225,9 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         return [];
       }
 
-      return data as B24Deal[];
+      await $logger.debug("Проверка данных", data);
+
+      return [];
     } catch (error) {
       $logger.error("Ошибка получения данных", { error });
       return [];
