@@ -81,7 +81,7 @@ const parsePhone = (value: string): string[] => {
       />
     </B24FormField>
     <div v-if="deals && deals.length > 0" class="mt-5">
-      <ProseH4 class="mb-2"> Найденные сделки: </ProseH4>
+      <ProseH4 class="mb-2 text-center"> Найденные сделки: </ProseH4>
       <ol>
         <li v-for="deal in deals" :key="deal.id">
           <B24Link type="button" @click="bitrixStore.methods.openDeal(deal.id)">
@@ -91,7 +91,7 @@ const parsePhone = (value: string): string[] => {
       </ol>
     </div>
     <div v-else-if="Array.isArray(deals)" class="mt-5">
-      <ProseH4 class="mb-2"> Ничего не найдено: </ProseH4>
+      <ProseH4 class="mb-2"> Ничего не найдено </ProseH4>
     </div>
   </div>
 </template>
