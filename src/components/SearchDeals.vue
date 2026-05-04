@@ -16,7 +16,7 @@ const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
   loading.value = true;
   const val = value as string;
 
-  if (!val || val.length < 6) {
+  if (!val || val.replace(/\D/g, "").length < 10) {
     details.value = "Необходимо заполнить поле";
     loading.value = false;
     return;
@@ -45,44 +45,20 @@ const parsePhone = (value: string): string[] => {
   // 9999999999
   args.push(match[0]);
 
-  if (match.length >= 3) {
-    // 999 999
-    args.push(`${match[1]} ${match[2]}`);
+  // 999 999-99-99
+  args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
 
-    // (999) 999
-    args.push(`(${match[1]}) ${match[2]}`);
-  }
+  // (999) 999-99-99
+  args.push(`(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`);
 
-  if (match.length >= 4) {
-    // 999 999 99
-    args.push(`${match[1]} ${match[2]} ${match[3]}`);
+  // (999) 999 99-99
+  args.push(`(${match[1]}) ${match[2]} ${match[3]}-${match[4]}`);
 
-    // 999 999-99
-    args.push(`${match[1]} ${match[2]}-${match[3]}`);
+  // (999) 999 99 99
+  args.push(`(${match[1]}) ${match[2]} ${match[3]} ${match[4]}`);
 
-    // (999) 999-99
-    args.push(`(${match[1]}) ${match[2]}-${match[3]}`);
-
-    // (999) 999 99
-    args.push(`(${match[1]}) ${match[2]} ${match[3]}`);
-  }
-
-  if (match.length >= 5) {
-    // 999 999-99-99
-    args.push(`${match[1]} ${match[2]}-${match[3]}-${match[4]}`);
-
-    // (999) 999-99-99
-    args.push(`(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`);
-
-    // (999) 999 99-99
-    args.push(`(${match[1]}) ${match[2]} ${match[3]}-${match[4]}`);
-
-    // (999) 999 99 99
-    args.push(`(${match[1]}) ${match[2]} ${match[3]} ${match[4]}`);
-
-    // 999 999 99 99
-    args.push(`${match[1]} ${match[2]} ${match[3]} ${match[4]}`);
-  }
+  // 999 999 99 99
+  args.push(`${match[1]} ${match[2]} ${match[3]} ${match[4]}`);
 
   return args;
 };
@@ -90,7 +66,11 @@ const parsePhone = (value: string): string[] => {
 
 <template>
   <div class="w-full inline-auto max-w-312.5">
-    <B24FormField label="Поиск по номеру телефона" :help="details">
+    <B24FormField
+      label="Поиск по номеру телефона"
+      :help="details"
+      class="inline-auto"
+    >
       <B24Input
         v-model="input"
         v-maska="'+7 (###) ### ##-##'"
