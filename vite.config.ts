@@ -5,7 +5,7 @@ import bitrix24UIPluginVite from "@bitrix24/b24ui-nuxt/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: "/frontend/deals/search/",
+    base: "/frontend/users/stat/",
     plugins: [
         vueRouter({
             dts: "src/route-map.d.ts",

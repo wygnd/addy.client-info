@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bitrix-frontend-search-deals
+    container_name: bitrix-frontend-users-stat
     restart: on-failure
     ports:
       - '127.0.0.1:3300:8080'

@@ -13,7 +13,7 @@ const app = createApp(App);
 
 const router = createRouter({
   routes,
-  history: createWebHistory("/frontend/deals/search/"),
+  history: createWebHistory("/frontend/users/stat/"),
 });
 
 app.use(pinia);
