@@ -4,7 +4,6 @@ import { LoggerInterface, SdkError } from "@bitrix24/b24jssdk";
 import { useBitrixStore } from "../store/bitrix-store.ts";
 import LeadsChart from "./LeadsChart.vue";
 import LeadsTable, { ILeadTableItem } from "./LeadsTable.vue";
-import { useDebounceFn } from "@vueuse/core";
 import { useFetch } from "../composables/use-fetch.ts";
 import UnavailableIcon from "@bitrix24/b24icons-vue/main/UnavailableIcon";
 import type { SelectMenuItem } from "@bitrix24/b24ui-nuxt";
@@ -113,18 +112,18 @@ onMounted(async () => {
     await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 
-  await loadData(date.value);
+  await loadData();
 });
 
 onUnmounted(() => {
   bitrixStore.destroy();
 });
 
-const debouncedChangeInput = useDebounceFn(async (value: unknown) => {
-  await loadData(value as string);
-}, 0);
+const handleClickButton = async () => {
+  await loadData();
+};
 
-const loadData = async (date: string) => {
+const loadData = async () => {
   loading.value = true;
   try {
     if (!departmentSelectValue.value || !departmentSelectValue.value.value) {
@@ -137,7 +136,7 @@ const loadData = async (date: string) => {
     }
 
     const params = new URLSearchParams({
-      date: date,
+      date: date.value,
       department: departmentList[departmentSelectValue.value.value].join(","),
     });
 
@@ -266,15 +265,15 @@ const loadData = async (date: string) => {
 
 <template>
   <div class="lg:px-8 py-10 max-w-400 mx-auto">
-    <div>
-      <div class="flex justify-between gap-2xl mb-10">
+    <div v-if="bitrixStore.isInit">
+      <div class="flex justify-between items-center gap-2xl mb-10">
         <div>
           <ProseH2 class="text-center" v-if="date"
             >Статистика за {{ date }}
           </ProseH2>
           <ProseH2 class="text-center" v-else>Статистика</ProseH2>
         </div>
-        <div class="flex gap-5">
+        <div class="flex items-center gap-5">
           <B24SelectMenu
             v-model="departmentSelectValue"
             :items="departmentSelectItems"
@@ -288,9 +287,11 @@ const loadData = async (date: string) => {
             type="date"
             v-model="date"
             :loading="loading"
-            @update:modelValue="debouncedChangeInput"
             class="min-w-42"
           />
+          <B24Button color="air-primary" @click="handleClickButton">
+            Показать
+          </B24Button>
         </div>
       </div>
       <div class="relative">
@@ -298,21 +299,23 @@ const loadData = async (date: string) => {
           v-if="loading"
           class="w-full h-full absolute top-0 left-0 z-10 bg-gray-300"
         />
-        <LeadsChart
-          :date="date"
-          :datasets="chartDatasets"
-          :labels="chartLabels"
-        />
-        <LeadsTable :labels="tableLabels" :items="tableData" class="mt-16" />
+        <div v-if="chartDatasets.length > 0">
+          <LeadsChart
+            :date="date"
+            :datasets="chartDatasets"
+            :labels="chartLabels"
+          />
+          <LeadsTable :labels="tableLabels" :items="tableData" class="mt-16" />
+        </div>
       </div>
     </div>
-    <!--    <B24Error-->
-    <!--      v-else-->
-    <!--      :clear="false"-->
-    <!--      :error="{-->
-    <!--        statusCode: 403,-->
-    <!--        statusMessage: 'Страница не найдена',-->
-    <!--      }"-->
-    <!--    />-->
+    <B24Error
+      v-else
+      :clear="false"
+      :error="{
+        statusCode: 403,
+        statusMessage: 'Страница не найдена',
+      }"
+    />
   </div>
 </template>
