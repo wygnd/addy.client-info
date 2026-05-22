@@ -238,7 +238,6 @@ const loadData = async () => {
 
     tableLabels.value = labelsTable;
     tableData.value = Array.from(dataTable.values());
-    console.log("tableData", tableData.value);
   } catch (error) {
     let errMessage: string;
 
@@ -299,7 +298,7 @@ const loadData = async () => {
           v-if="loading"
           class="w-full h-full absolute top-0 left-0 z-10 bg-gray-300"
         />
-        <div v-if="chartDatasets.length > 0">
+        <div>
           <LeadsChart
             :date="date"
             :datasets="chartDatasets"
