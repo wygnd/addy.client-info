@@ -140,38 +140,39 @@ const loadData = async (date: string) => {
 </script>
 
 <template>
-  <div class="lg:px-8 py-10 max-w-[1600px] mx-auto">
-    <div class="flex justify-between gap-2xl mb-10">
-      <ProseH2 class="mb-6 text-center" v-if="date"
-        >Статистика за {{ date }}
-      </ProseH2>
-      <ProseH2 class="mb-6 text-center" v-else>Статистика</ProseH2>
-      <B24Input
-        type="date"
-        v-model="date"
-        :loading="loading"
-        @update:modelValue="debouncedChangeInput"
-      />
+  <div class="lg:px-8 py-10 max-w-400 mx-auto">
+    <div v-if="bitrixStore.isInit">
+      <div class="flex justify-between gap-2xl mb-10">
+        <ProseH2 class="mb-6 text-center" v-if="date"
+          >Статистика за {{ date }}
+        </ProseH2>
+        <ProseH2 class="mb-6 text-center" v-else>Статистика</ProseH2>
+        <B24Input
+          type="date"
+          v-model="date"
+          :loading="loading"
+          @update:modelValue="debouncedChangeInput"
+        />
+      </div>
+      <div class="relative">
+        <B24Skeleton
+          v-if="loading"
+          class="w-full h-full absolute top-0 left-0 z-10 bg-gray-300"
+        />
+        <LeadsChart
+          :date="date"
+          :datasets="chartDatasets"
+          :labels="chartLabels"
+        />
+      </div>
     </div>
-    <div class="relative">
-      <B24Skeleton
-        v-if="loading"
-        class="w-full h-full absolute top-0 left-0 z-10 bg-gray-300"
-      />
-      <LeadsChart
-        :date="date"
-        :datasets="chartDatasets"
-        :labels="chartLabels"
-      />
-    </div>
-
-    <!--    <B24Error-->
-    <!--      v-else-->
-    <!--      :clear="false"-->
-    <!--      :error="{-->
-    <!--        statusCode: 403,-->
-    <!--        statusMessage: 'Страница не найдена',-->
-    <!--      }"-->
-    <!--    />-->
+    <B24Error
+      v-else
+      :clear="false"
+      :error="{
+        statusCode: 403,
+        statusMessage: 'Страница не найдена',
+      }"
+    />
   </div>
 </template>
