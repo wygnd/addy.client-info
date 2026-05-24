@@ -22,11 +22,16 @@ console.log("check props", props);
 </script>
 
 <template>
-  <B24TableWrapper class="overflow-x-auto w-full p-3 bg-gray-30" rounded row-hover>
+  <B24TableWrapper
+    class="overflow-x-auto w-full p-3 bg-gray-30"
+    rounded
+    row-hover
+  >
     <table>
       <thead>
         <tr>
           <th v-for="label in labels">{{ label }}</th>
+          <th>Общее кол-во</th>
         </tr>
       </thead>
       <tbody>
@@ -38,6 +43,16 @@ console.log("check props", props);
           <td>{{ item.new_leads.size }}</td>
           <td>{{ item["1c_leads"].size }}</td>
           <td>{{ item.converted_leads.size }}</td>
+          <td>
+            {{
+              Object.values(item).reduce((acc, i) => {
+                if (i instanceof Set) {
+                  acc += i.size;
+                }
+                return acc;
+              }, 0)
+            }}
+          </td>
         </tr>
       </tbody>
       <tfoot>
@@ -71,6 +86,19 @@ console.log("check props", props);
             {{
               items.reduce((acc, item) => {
                 acc += item.converted_leads.size;
+                return acc;
+              }, 0)
+            }}
+          </td>
+          <td>
+            {{
+              items.reduce((acc, item) => {
+                acc += Object.values(item).reduce((acc, i) => {
+                  if (i instanceof Set) {
+                    acc += i.size;
+                  }
+                  return acc;
+                }, 0);
                 return acc;
               }, 0)
             }}
