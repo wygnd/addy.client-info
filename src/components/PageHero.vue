@@ -177,12 +177,8 @@ const loadData = async () => {
       let backgroundColor: string;
 
       switch (name) {
-        case "active_leads":
-          backgroundColor = "#3b80c4";
-          break;
-
         case "new_leads":
-          backgroundColor = "#3bc456";
+          backgroundColor = "#3b80c4";
           break;
 
         case "1c_leads":

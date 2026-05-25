@@ -14,11 +14,9 @@ interface ILeadsTableProps {
   items: ILeadTableItem[];
 }
 
-const props = defineProps<ILeadsTableProps>();
+defineProps<ILeadsTableProps>();
 
 const bitrixStore = useBitrixStore();
-
-console.log("check props", props);
 </script>
 
 <template>
@@ -39,7 +37,6 @@ console.log("check props", props);
           <th @click="bitrixStore?.methods.openUserChat(item.user.id)">
             {{ item.user.name }}
           </th>
-          <td>{{ item.active_leads.size }}</td>
           <td>{{ item.new_leads.size }}</td>
           <td>{{ item["1c_leads"].size }}</td>
           <td>{{ item.converted_leads.size }}</td>
@@ -58,14 +55,6 @@ console.log("check props", props);
       <tfoot>
         <tr>
           <th>Итого:</th>
-          <td>
-            {{
-              items.reduce((acc, item) => {
-                acc += item.active_leads.size;
-                return acc;
-              }, 0)
-            }}
-          </td>
           <td>
             {{
               items.reduce((acc, item) => {
