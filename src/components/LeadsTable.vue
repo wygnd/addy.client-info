@@ -10,8 +10,7 @@ export interface ILeadTableItem {
 }
 
 interface ILeadsTableProps {
-  labels: string[];
-  items: ILeadTableItem[];
+  items: Map<string, ILeadTableItem>;
 }
 
 defineProps<ILeadsTableProps>();
@@ -28,12 +27,15 @@ const bitrixStore = useBitrixStore();
     <table>
       <thead>
         <tr>
-          <th v-for="label in labels">{{ label }}</th>
+          <th>Менеджер</th>
+          <th>Новые лиды</th>
+          <th>1С Лиды</th>
+          <th>Качественные лиды</th>
           <th>Общее кол-во</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items">
+        <tr v-for="item in items.values()">
           <th @click="bitrixStore?.methods.openUserChat(item.user.id)">
             {{ item.user.name }}
           </th>
@@ -57,7 +59,7 @@ const bitrixStore = useBitrixStore();
           <th>Итого:</th>
           <td>
             {{
-              items.reduce((acc, item) => {
+              Array.from(items.values()).reduce((acc, item) => {
                 acc += item.new_leads.size;
                 return acc;
               }, 0)
@@ -65,7 +67,7 @@ const bitrixStore = useBitrixStore();
           </td>
           <td>
             {{
-              items.reduce((acc, item) => {
+              Array.from(items.values()).reduce((acc, item) => {
                 acc += item["1c_leads"].size;
                 return acc;
               }, 0)
@@ -73,7 +75,7 @@ const bitrixStore = useBitrixStore();
           </td>
           <td>
             {{
-              items.reduce((acc, item) => {
+              Array.from(items.values()).reduce((acc, item) => {
                 acc += item.converted_leads.size;
                 return acc;
               }, 0)
@@ -81,7 +83,7 @@ const bitrixStore = useBitrixStore();
           </td>
           <td>
             {{
-              items.reduce((acc, item) => {
+              Array.from(items.values()).reduce((acc, item) => {
                 acc += Object.values(item).reduce((acc, i) => {
                   if (i instanceof Set) {
                     acc += i.size;

@@ -28,6 +28,17 @@ const departmentList: Record<B24UserStatDepartmentType, number[]> = {
   [B24UserStatDepartmentType.C]: [230],
 };
 
+interface IChartData {
+  [key: string]: any;
+}
+
+interface IChartDataset {
+  label: string;
+  data: any[];
+  borderWidth: number;
+  backgroundColor: string;
+}
+
 interface IStatDataItem {
   user_id: string;
   leads: number[];
@@ -44,6 +55,12 @@ interface IStatResponse {
   request_date: string;
   data: IStatData[];
   timestamp: number;
+}
+
+interface ILabelOptions {
+  label: string;
+  backgroundColor: string;
+  index: number;
 }
 
 type SelectMenuItemExtended = SelectMenuItem & {
@@ -90,8 +107,9 @@ const departmentSelectItems: SelectMenuItemExtended[] = [
 const departmentSelectValue = ref<SelectMenuItemExtended>(
   departmentSelectItems[0],
 );
-const tableLabels = ref<string[]>([]);
-const tableData = ref<ILeadTableItem[]>([]);
+const tableData = ref<Map<string, ILeadTableItem>>(
+  new Map<string, ILeadTableItem>(),
+);
 
 onMounted(async () => {
   try {
@@ -165,15 +183,11 @@ const loadData = async () => {
       return;
     }
 
-    let labels = new Map<string, string>();
-    let datasets: any[] = [];
-
-    let labelsTable: string[] = [];
+    const chartData = new Map<string, IChartData>();
+    const labelsMap = new Map<string, ILabelOptions>();
     let dataTable = new Map<string, ILeadTableItem>();
 
-    labelsTable.push("Менеджер");
-
-    data.data.forEach(({ label, name, items }) => {
+    data.data.forEach(({ label, name, items }, index) => {
       let backgroundColor: string;
 
       switch (name) {
@@ -214,26 +228,63 @@ const loadData = async () => {
         });
       }
 
-      datasets.push({
-        label: label,
-        data: items.map((i) => {
-          if (!labels.has(i.user_id)) {
-            labels.set(i.user_id, i.username);
-          }
-          return i.leads.length;
-        }),
-        backgroundColor: backgroundColor,
-        borderWidth: 1,
-      });
-
-      labelsTable.push(label);
+      labelsMap.set(name, { label, backgroundColor, index });
     });
 
-    chartLabels.value = Array.from(labels.values());
-    chartDatasets.value = datasets;
+    for (const item of dataTable.values()) {
+      const { id: userId, name: username } = item.user;
 
-    tableLabels.value = labelsTable;
-    tableData.value = Array.from(dataTable.values());
+      for (const key of Object.keys(item)) {
+        if (!labelsMap.has(key)) {
+          continue;
+        }
+
+        const chartUserData = chartData.get(userId);
+
+        if (!chartUserData) {
+          chartData.set(userId, {
+            [key]: [...item[key]],
+            username: username,
+          });
+          continue;
+        }
+
+        chartData.set(userId, {
+          ...chartUserData,
+          [key]: [...(chartUserData[key] ?? []), ...item[key]],
+        });
+      }
+    }
+
+    chartLabels.value = Array.from(chartData.values()).map((d) => d.username);
+    chartDatasets.value = Array.from(chartData.values()).reduce<
+      IChartDataset[]
+    >((acc, d) => {
+      for (const key of Object.keys(d)) {
+        if (!labelsMap.has(key)) {
+          continue;
+        }
+
+        const { label, backgroundColor, index } = labelsMap.get(key)!;
+
+        if (!(index in acc)) {
+          acc[index] = {
+            label: label,
+            backgroundColor: backgroundColor,
+            borderWidth: 1,
+            data: [d[key].length],
+          };
+
+          continue;
+        }
+
+        acc[index].data.push(d[key].length);
+      }
+
+      return acc;
+    }, []);
+
+    tableData.value = dataTable;
   } catch (error) {
     let errMessage: string;
 
@@ -242,7 +293,6 @@ const loadData = async () => {
     } else if (typeof error === "string") {
       errMessage = error;
     } else {
-      console.log(error);
       errMessage = "Internal Server Error";
     }
 
@@ -300,7 +350,7 @@ const loadData = async () => {
             :datasets="chartDatasets"
             :labels="chartLabels"
           />
-          <LeadsTable :labels="tableLabels" :items="tableData" class="mt-16" />
+          <LeadsTable :items="tableData" class="mt-16" />
         </div>
       </div>
     </div>
