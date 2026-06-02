@@ -6,7 +6,8 @@ import UnavailableIcon from "@bitrix24/b24icons-vue/main/UnavailableIcon";
 interface ILeadsChartProps {
   datasets: any[];
   labels: string[];
-  date: string;
+  dateStart: string;
+  dateEnd: string;
 }
 
 const props = defineProps<ILeadsChartProps>();
@@ -54,10 +55,7 @@ watch([() => props.datasets, () => props.labels], () => {
 </script>
 
 <template>
-
   <canvas id="leads-chart" width="1200" height="400"></canvas>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

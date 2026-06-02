@@ -3,12 +3,13 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { LoggerInterface, SdkError } from "@bitrix24/b24jssdk";
 import { useBitrixStore } from "../store/bitrix-store.ts";
 import LeadsChart from "./LeadsChart.vue";
-import LeadsTable, { ILeadTableItem } from "./LeadsTable.vue";
+import LeadsTable from "./LeadsTable.vue";
 import { useFetch } from "../composables/use-fetch.ts";
 import UnavailableIcon from "@bitrix24/b24icons-vue/main/UnavailableIcon";
 import type { SelectMenuItem } from "@bitrix24/b24ui-nuxt";
+import { UserStatDimensionType } from "../types";
 
-const enum B24UserStatDepartmentType {
+const enum UserStatDepartmentType {
   ALL = "all",
   SALES = "office_sales",
   SALE_1 = "office_sale_1",
@@ -18,37 +19,31 @@ const enum B24UserStatDepartmentType {
   ADDY = "office_addy",
 }
 
-const departmentList: Record<B24UserStatDepartmentType, number[]> = {
-  [B24UserStatDepartmentType.ALL]: [42, 48, 74, 228, 230],
-  [B24UserStatDepartmentType.SALES]: [42, 48],
-  [B24UserStatDepartmentType.SALE_1]: [42],
-  [B24UserStatDepartmentType.SALE_2]: [48],
-  [B24UserStatDepartmentType.HOME_SALES]: [74],
-  [B24UserStatDepartmentType.ADDY]: [228],
-  [B24UserStatDepartmentType.C]: [230],
+type UserStatDimensions = {
+  [key in UserStatDimensionType]: number;
 };
 
-interface IChartData {
-  [key: string]: any;
-}
+const departmentList: Record<UserStatDepartmentType, number[]> = {
+  [UserStatDepartmentType.ALL]: [42, 48, 74, 228, 230],
+  [UserStatDepartmentType.SALES]: [42, 48],
+  [UserStatDepartmentType.SALE_1]: [42],
+  [UserStatDepartmentType.SALE_2]: [48],
+  [UserStatDepartmentType.HOME_SALES]: [74],
+  [UserStatDepartmentType.ADDY]: [228],
+  [UserStatDepartmentType.C]: [230],
+};
 
-interface IChartDataset {
+interface IChartDataset<T> {
   label: string;
-  data: any[];
+  data: T[];
   borderWidth: number;
   backgroundColor: string;
 }
 
-interface IStatDataItem {
+export interface IStatData {
   user_id: string;
-  leads: number[];
   username: string;
-}
-
-interface IStatData {
-  label: string;
-  name: string;
-  items: IStatDataItem[];
+  statistics: UserStatDimensions;
 }
 
 interface IStatResponse {
@@ -57,59 +52,58 @@ interface IStatResponse {
   timestamp: number;
 }
 
-interface ILabelOptions {
-  label: string;
-  backgroundColor: string;
-  index: number;
-}
-
 type SelectMenuItemExtended = SelectMenuItem & {
-  value?: B24UserStatDepartmentType;
+  value?: UserStatDepartmentType;
 };
 
 const bitrixStore = useBitrixStore();
 const toast = useToast();
 
-const date = ref<string>(new Date().toISOString().split("T")[0]);
+const labelMap: Record<UserStatDimensionType, string> = {
+  [UserStatDimensionType.BASE]: "Лиды из Базы",
+  [UserStatDimensionType.C_LEAD]: "1C Лиды",
+  [UserStatDimensionType.NEW]: "Новые Лиды",
+  [UserStatDimensionType.CONVERTED]: "Качественные Лиды",
+};
+const dateStart = ref<string>(new Date().toISOString().split("T")[0]);
+const dateEnd = ref<string>(new Date().toISOString().split("T")[0]);
 const chartLabels = ref<string[]>([]);
 const chartDatasets = ref<any[]>([]);
 const loading = ref<boolean>(false);
 const departmentSelectItems: SelectMenuItemExtended[] = [
   {
     label: "Все отделы",
-    value: B24UserStatDepartmentType.ALL,
+    value: UserStatDepartmentType.ALL,
   },
   {
     label: "Все офисные менеджеры",
-    value: B24UserStatDepartmentType.SALES,
+    value: UserStatDepartmentType.SALES,
   },
   {
     label: "Отдел продаж 1",
-    value: B24UserStatDepartmentType.SALE_1,
+    value: UserStatDepartmentType.SALE_1,
   },
   {
     label: "Отдел продаж 2",
-    value: B24UserStatDepartmentType.SALE_2,
+    value: UserStatDepartmentType.SALE_2,
   },
   {
     label: "Все удаленщики",
-    value: B24UserStatDepartmentType.HOME_SALES,
+    value: UserStatDepartmentType.HOME_SALES,
   },
   {
     label: "1C",
-    value: B24UserStatDepartmentType.C,
+    value: UserStatDepartmentType.C,
   },
   {
     label: "Addy",
-    value: B24UserStatDepartmentType.ADDY,
+    value: UserStatDepartmentType.ADDY,
   },
 ];
 const departmentSelectValue = ref<SelectMenuItemExtended>(
   departmentSelectItems[0],
 );
-const tableData = ref<Map<string, ILeadTableItem>>(
-  new Map<string, ILeadTableItem>(),
-);
+const tableData = ref<IStatData[]>([]);
 
 onMounted(async () => {
   try {
@@ -138,6 +132,16 @@ onUnmounted(() => {
 });
 
 const handleClickButton = async () => {
+  if (new Date(dateStart.value) > new Date(dateEnd.value)) {
+    toast.add({
+      title: "Не правильно выбраны даты",
+      description: "Дата начала не может быть позже даты конца",
+      icon: UnavailableIcon,
+      color: "air-primary-alert",
+    });
+    return;
+  }
+
   await loadData();
 };
 
@@ -154,7 +158,8 @@ const loadData = async () => {
     }
 
     const params = new URLSearchParams({
-      date: date.value,
+      date_start: dateStart.value,
+      date_end: dateEnd.value,
       department: departmentList[departmentSelectValue.value.value].join(","),
     });
 
@@ -163,128 +168,64 @@ const loadData = async () => {
     );
 
     if (error) {
-      toast.add({
-        title: "Ошибка при отправке запроса",
-        description: error,
-        color: "air-primary-alert",
-        icon: UnavailableIcon,
-      });
-      return;
+      throw new Error(error);
     }
 
     if (!data) {
-      toast.add({
-        title: "Ошибка получения данных",
-        description: "Сервер вернул пустой результат",
-        color: "air-primary-alert",
-        icon: UnavailableIcon,
-      });
-
-      return;
+      throw new Error("Сервер вернул пустой результат");
     }
 
-    const chartData = new Map<string, IChartData>();
-    const labelsMap = new Map<string, ILabelOptions>();
-    let dataTable = new Map<string, ILeadTableItem>();
+    const labelsSet: string[] = [];
+    const datasets: Record<string, IChartDataset<number>> = {};
 
-    data.data.forEach(({ label, name, items }, index) => {
-      let backgroundColor: string;
+    data.data.forEach(({ username, statistics }) => {
+      for (const [key, countLeads] of Object.entries(statistics)) {
+        let backgroundColor: string;
 
-      switch (name) {
-        case "new_leads":
-          backgroundColor = "#3b80c4";
-          break;
+        switch (key) {
+          case "new_leads":
+            backgroundColor = "#3b80c4";
+            break;
 
-        case "1c_leads":
-          backgroundColor = "#c4b93b";
-          break;
+          case "leads_1c":
+            backgroundColor = "#c4b93b";
+            break;
 
-        case "converted_leads":
-          backgroundColor = "#28b128";
-          break;
+          case "converted_leads":
+            backgroundColor = "#28b128";
+            break;
 
-        default:
-          backgroundColor = "";
-          break;
-      }
+          case "base_leads":
+            backgroundColor = "#b17628";
+            break;
 
-      for (const { user_id: userId, username, leads } of items) {
-        const tableDataItem = dataTable.get(userId);
-
-        if (!tableDataItem) {
-          dataTable.set(userId, {
-            user: {
-              id: userId,
-              name: username,
-            },
-            [name]: new Set(leads),
-          });
-          continue;
+          default:
+            backgroundColor = "";
+            break;
         }
 
-        dataTable.set(userId, {
-          ...tableDataItem,
-          [name]: new Set([...(tableDataItem[name] ?? []), ...leads]),
-        });
+        if (!(key in datasets)) {
+          datasets[key] = {
+            label: labelMap[key as UserStatDimensionType],
+            data: [countLeads],
+            borderWidth: 1,
+            backgroundColor: backgroundColor,
+          };
+        } else {
+          datasets[key] = {
+            ...datasets[key],
+            data: [...datasets[key].data, countLeads],
+          };
+        }
       }
 
-      labelsMap.set(name, { label, backgroundColor, index });
+      labelsSet.push(username);
     });
 
-    for (const item of dataTable.values()) {
-      const { id: userId, name: username } = item.user;
+    chartDatasets.value = Object.values(datasets);
+    chartLabels.value = labelsSet;
 
-      for (const key of Object.keys(item)) {
-        if (!labelsMap.has(key)) {
-          continue;
-        }
-
-        const chartUserData = chartData.get(userId);
-
-        if (!chartUserData) {
-          chartData.set(userId, {
-            [key]: [...item[key]],
-            username: username,
-          });
-          continue;
-        }
-
-        chartData.set(userId, {
-          ...chartUserData,
-          [key]: [...(chartUserData[key] ?? []), ...item[key]],
-        });
-      }
-    }
-
-    chartLabels.value = Array.from(chartData.values()).map((d) => d.username);
-    chartDatasets.value = Array.from(chartData.values()).reduce<
-      IChartDataset[]
-    >((acc, d) => {
-      for (const key of Object.keys(d)) {
-        if (!labelsMap.has(key)) {
-          continue;
-        }
-
-        const { label, backgroundColor, index } = labelsMap.get(key)!;
-
-        if (!(index in acc)) {
-          acc[index] = {
-            label: label,
-            backgroundColor: backgroundColor,
-            borderWidth: 1,
-            data: [d[key].length],
-          };
-
-          continue;
-        }
-
-        acc[index].data.push(d[key].length);
-      }
-
-      return acc;
-    }, []);
-
-    tableData.value = dataTable;
+    tableData.value = data.data;
   } catch (error) {
     let errMessage: string;
 
@@ -310,11 +251,11 @@ const loadData = async () => {
 
 <template>
   <div class="lg:px-8 py-10 max-w-400 mx-auto">
-    <div v-if="bitrixStore.isInit">
+    <div>
       <div class="flex justify-between items-center gap-2xl mb-10">
         <div>
-          <ProseH2 class="text-center" v-if="date"
-            >Статистика за {{ date }}
+          <ProseH2 class="text-center" v-if="dateStart"
+            >Статистика за {{ dateStart }}
           </ProseH2>
           <ProseH2 class="text-center" v-else>Статистика</ProseH2>
         </div>
@@ -327,14 +268,27 @@ const loadData = async () => {
             :search-input="{
               placeholder: 'Отдел',
             }"
+            :loading="loading"
           />
           <B24Input
             type="date"
-            v-model="date"
+            v-model="dateStart"
             :loading="loading"
             class="min-w-42"
+            tag="Начало"
           />
-          <B24Button color="air-primary" @click="handleClickButton">
+          <B24Input
+            type="date"
+            v-model="dateEnd"
+            :loading="loading"
+            class="min-w-42"
+            tag="Конец"
+          />
+          <B24Button
+            :loading="loading"
+            @click="handleClickButton"
+            color="air-primary"
+          >
             Показать
           </B24Button>
         </div>
@@ -346,7 +300,8 @@ const loadData = async () => {
         />
         <div>
           <LeadsChart
-            :date="date"
+            :dateStart="dateStart"
+            :dateEnd="dateEnd"
             :datasets="chartDatasets"
             :labels="chartLabels"
           />
