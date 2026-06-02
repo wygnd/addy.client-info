@@ -251,7 +251,7 @@ const loadData = async () => {
 
 <template>
   <div class="lg:px-8 py-10 max-w-400 mx-auto">
-    <div>
+    <div v-if="bitrixStore.isInit">
       <div class="flex justify-between items-center gap-2xl mb-10">
         <div>
           <ProseH2 class="text-center" v-if="dateStart"
