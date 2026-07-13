@@ -23,6 +23,7 @@ export const useClientStore = defineStore("clientInfo", () => {
         isLoading.value = true;
       }
 
+      const auth = btoa(`${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`);
       const { error, data } = await useApi<IApiResponse<IClient>>(
         `${API_URL}/user/${clientId.value}`,
         {
@@ -30,6 +31,7 @@ export const useClientStore = defineStore("clientInfo", () => {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
+            Authorization: `Basic ${auth}`,
           },
         },
       );

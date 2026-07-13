@@ -22,7 +22,7 @@ export const useAddyChatStore = defineStore("chats", () => {
       const requestLimit = limit ? limit : currentLimit.value;
       let requestPage = page ? page : currentPage.value;
 
-      while(true) {
+      while (true) {
         if (visitedPages.value.has(requestPage)) {
           requestPage += 1;
           continue;
@@ -31,11 +31,20 @@ export const useAddyChatStore = defineStore("chats", () => {
         break;
       }
 
-
       visitedPages.value.add(requestPage);
 
+      const auth = btoa(
+        `${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`,
+      );
       const { error, data } = await useApi<IApiResponse<IAddyMessageResponse>>(
         `${API_URL}/user/${clientStore.clientId}/chats?limit=${requestLimit}&page=${requestPage}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Basic ${auth}`,
+          },
+        },
       );
 
       if (error) {

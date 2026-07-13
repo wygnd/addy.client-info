@@ -19,15 +19,15 @@ onMounted(async () => {
   try {
     await bitrixStore.init();
 
-    const { leadId } = bitrixStore.options;
-
-    const lead = await bitrixStore.methods.getLeadById(leadId as string);
-
-    if (!lead || !("ufCrm_1773150315164" in lead)) {
-      return;
-    }
-
-    clientStore.setClientId(parseInt(lead.ufCrm_1773150315164 as string));
+    // const { leadId } = bitrixStore.options;
+    //
+    // const lead = await bitrixStore.methods.getLeadById(leadId as string);
+    //
+    // if (!lead || !("ufCrm_1773150315164" in lead)) {
+    //   return;
+    // }
+    //
+    // clientStore.setClientId(parseInt(lead.ufCrm_1773150315164 as string));
   } catch (e) {
     let messageError = "Неизвестная ошибка";
     let loggerType: keyof LoggerInterface = "error";
@@ -44,7 +44,7 @@ onMounted(async () => {
     await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 
-  clientStore.setClientId(1);
+  // clientStore.setClientId(3);
 });
 
 onUnmounted(() => {
