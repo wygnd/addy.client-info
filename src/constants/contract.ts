@@ -1,0 +1,45 @@
+import { IContract, IContractPayload, TFieldConfig } from "../types";
+import { formatDate } from "../utils/mappers";
+
+export const CONTRACT_CONFIG: TFieldConfig<IContract> = {
+  id: { label: "ID" },
+  contract_type: { label: "Тип договора" },
+  balance: { label: "Баланс" },
+  inn: { label: "ИНН" },
+  created_at: { label: "Создан", format: formatDate },
+  number: { label: "Номер" },
+  payload: { label: "Реквизиты" },
+};
+
+export const CONTRACT_PAYLOAD_CONFIG: TFieldConfig<IContractPayload> = {
+  addy_client_id: { label: "ID" },
+  contract_id: { label: "ID договора" },
+  contract_date: { label: "Дата создания договора", format: formatDate },
+  contract_num: { label: "Номер договора" },
+  contact_face: { label: "Контактное лицо" },
+  company_name: { label: "Компания" },
+  inn: { label: "ИНН" },
+  kpp: { label: "КПП" },
+  ogrn: { label: "ОГРН" },
+  contract_status: { label: "Статус" },
+  contract_type: { label: "Тип" },
+  contragent_status: { label: "Статус контрагента" },
+  contract_name: { label: "Название договора" },
+  reward_method: { label: "" },
+  pick_up: { label: "" },
+  vat: { label: "" },
+  okved: { label: "ОКВЭД" },
+  bank_name: { label: "Банк" },
+  bik: { label: "БИК" },
+  checking_account: { label: "Расчетный счет" },
+  correspondent_account: { label: "Корреспондентский счет" },
+  job_title: { label: "Должность" },
+  lastname: { label: "Фамилия" },
+  firstname: { label: "Имя" },
+  surname: { label: "Отчество" },
+  email: { label: "Почта" },
+  phone: { label: "Телефон" },
+  legal_address: { label: "Физический адрес" },
+  actual_address: { label: "Юридический адрес" },
+  edo_id: { label: "" },
+};

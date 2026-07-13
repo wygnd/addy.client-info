@@ -1,1 +1,1 @@
-# Отчет по менеджерам
+# CRM LEAD DETAIL TAB

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useBitrixStore } from "../store/bitrix-store.ts";
+import { useBitrixStore } from "../store/bitrixStore.ts";
 
 const bitrixStore = useBitrixStore();
 </script>
 
 <template>
-  <B24Footer>
+  <B24Footer class="mt-10">
     <template #left>
       <ProseP small accent="less" class="mb-0">
         Создано с помощью Bitrix24 UI • &copy; {{ new Date().getFullYear() }}
