@@ -80,7 +80,7 @@ watch(
 </script>
 
 <template>
-  <div ref="scrollRef" class="h-180 overflow-auto">
+  <div ref="scrollRef" class="h-165 overflow-auto">
     <div ref="sentinelRef" class="chat-sentinel" />
 
     <div v-if="!hasMore" class="flex justify-center">
@@ -103,13 +103,9 @@ watch(
         b24ui: { content: 'rounded-2xl rounded-bl-sm w-fit' },
       }"
       :messages="messages"
+      :autoScroll="false"
     />
   </div>
 </template>
 
-<style scoped>
-.chat-sentinel {
-  height: 1px;
-  overflow-anchor: none; /* важно! отключаем встроенный scroll anchoring браузера */
-}
-</style>
+<style scoped></style>
