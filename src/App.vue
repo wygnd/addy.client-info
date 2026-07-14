@@ -65,7 +65,7 @@ onUnmounted(() => {
           }"
         >
           <AppHeader
-            class="shrink-0 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) w-1/5 h-fit p-5 pb-10"
+            class="shrink-0 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) w-1/6 h-fit p-5 pb-10"
           />
           <B24PageBody
             class="m-0 gap-20 h-[85dvh] overflow-y-auto p-5 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) flex-1 w-full overflow-auto"
