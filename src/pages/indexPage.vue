@@ -31,7 +31,7 @@ const clientStore = useClientStore();
   <B24ChatShimmer
     v-if="clientStore.isLoading"
     class="flex mt-4xl"
-    text="Загрузка данных"
+    text="Загрузка данных..."
     :duration="3"
   />
 

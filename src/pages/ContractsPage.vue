@@ -49,7 +49,7 @@ const pageTitle = computed<string>(() => {
   <B24ChatShimmer
     v-if="clientStore.isLoading"
     class="flex items-start justify-center mt-8xl"
-    text="Загрузка договоров"
+    text="Загрузка договоров..."
     :duration="3"
   />
 

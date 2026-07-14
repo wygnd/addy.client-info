@@ -84,26 +84,33 @@ watch(
     <div ref="sentinelRef" class="chat-sentinel" />
 
     <div v-if="!hasMore" class="flex justify-center">
-      <B24ChatShimmer text="Сообщений больше нет.." :duration="0" />
+      <B24ChatShimmer text="Сообщений больше нет" :duration="0" />
     </div>
 
     <div v-if="loading" class="flex justify-center">
-      <B24ChatShimmer text="Загрузка сообщений…" />
+      <B24ChatShimmer text="Загрузка сообщений..." />
     </div>
 
     <B24ChatMessages
       :user="{
         side: 'right',
         variant: 'system',
-        b24ui: { content: 'rounded-2xl rounded-br-sm' },
+        b24ui: {
+          content:
+            'rounded-2xl rounded-br-sm text-white bg-(--ui-color-accent-main-primary)',
+        },
       }"
       :assistant="{
         side: 'left',
         variant: 'system',
-        b24ui: { content: 'rounded-2xl rounded-bl-sm w-fit' },
+        b24ui: {
+          content:
+            'rounded-2xl rounded-bl-sm w-fit text-(--b24ui-typography-description-color) bg-transparent border-1 border-(--b24ui-typography-description-color)',
+        },
       }"
       :messages="messages"
       :autoScroll="false"
+      :compact="true"
     />
   </div>
 </template>

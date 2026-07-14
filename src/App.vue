@@ -43,7 +43,7 @@ onMounted(async () => {
     await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 
-  // clientStore.setClientId(1);
+  clientStore.setClientId(1);
 });
 
 onUnmounted(() => {
@@ -54,7 +54,6 @@ onUnmounted(() => {
 <template>
   <Suspense>
     <B24App
-      v-if="bitrixStore.isInit || clientStore.clientId || clientStore.client"
       :toaster="toaster"
     >
       <B24Main as="div" class="min-h-0">
@@ -76,13 +75,13 @@ onUnmounted(() => {
       </B24Main>
       <AppFooter />
     </B24App>
-    <B24Error
-      v-else
-      :clear="false"
-      :error="{
-        statusCode: 403,
-        statusMessage: 'Страница не найдена',
-      }"
-    />
+<!--    <B24Error-->
+<!--      v-else-->
+<!--      :clear="false"-->
+<!--      :error="{-->
+<!--        statusCode: 403,-->
+<!--        statusMessage: 'Страница не найдена',-->
+<!--      }"-->
+<!--    />-->
   </Suspense>
 </template>

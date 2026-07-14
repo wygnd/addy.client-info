@@ -112,11 +112,12 @@ const handleClickLoginBadge = (event: PointerEvent) => {
 
 <template>
   <ProseH1>Рекламные системы</ProseH1>
-  <div v-if="clientStore.isLoading" class="mt-8">
-    <B24Skeleton class="w-full h-6xl mb-2" />
-    <B24Skeleton class="w-full h-6xl mb-2" />
-    <B24Skeleton class="w-full h-6xl mb-2" />
-  </div>
+  <B24ChatShimmer
+    v-if="clientStore.isLoading"
+    class="flex items-start justify-center mt-8xl"
+    text="Загрузка рекламных систем..."
+    :duration="3"
+  />
   <div v-if="clientStore.client && !clientStore.isLoading">
     <B24Table
       :data="clientStore.client.accounts"

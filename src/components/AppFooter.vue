@@ -5,7 +5,11 @@ const bitrixStore = useBitrixStore();
 </script>
 
 <template>
-  <B24Footer>
+  <B24Footer
+    :b24ui="{
+      container: 'max-w-[1800px] px-0 sm:px-0 lg:px-0',
+    }"
+  >
     <template #left>
       <ProseP small accent="less" class="mb-0">
         Создано с помощью Bitrix24 UI • &copy; {{ new Date().getFullYear() }}
