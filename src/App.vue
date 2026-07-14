@@ -49,7 +49,6 @@ onMounted(async () => {
 onUnmounted(() => {
   bitrixStore.destroy();
 });
-
 </script>
 
 <template>
@@ -62,14 +61,14 @@ onUnmounted(() => {
         <B24Container
           class="flex gap-4"
           :b24ui="{
-            base: 'max-w-[1600px]',
+            base: 'max-w-[1800px]',
           }"
         >
           <AppHeader
-            class="shrink-0 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) w-1/5 h-fit p-6"
+            class="shrink-0 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) w-1/5 h-fit p-5 pb-10"
           />
           <B24PageBody
-            class="m-0 gap-20 h-[85dvh] overflow-y-auto p-8 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) flex-1 w-full overflow-auto"
+            class="m-0 gap-20 h-[85dvh] overflow-y-auto p-5 rounded-(--ui-border-radius-md) bg-(--ui-color-design-outline-bg) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content) flex-1 w-full overflow-auto"
           >
             <RouterView />
           </B24PageBody>
@@ -77,13 +76,13 @@ onUnmounted(() => {
       </B24Main>
       <AppFooter />
     </B24App>
-        <B24Error
-          v-else
-          :clear="false"
-          :error="{
-            statusCode: 403,
-            statusMessage: 'Страница не найдена',
-          }"
-        />
+            <B24Error
+              v-else
+              :clear="false"
+              :error="{
+                statusCode: 403,
+                statusMessage: 'Страница не найдена',
+              }"
+            />
   </Suspense>
 </template>

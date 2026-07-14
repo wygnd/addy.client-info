@@ -128,9 +128,13 @@ const handleUpdateSelectMenu = (id: string) => {
         clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
       "
       placeholder="Не выбрано"
+      underline
       value-key="id"
-      size="lg"
       @update:modelValue="handleUpdateSelectMenu"
+      :b24ui="{
+        root: 'w-full',
+        tag: 'left-0 right-auto top-[-20px]',
+      }"
     />
   </header>
 </template>
