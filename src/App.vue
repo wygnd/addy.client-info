@@ -20,12 +20,7 @@ onMounted(async () => {
     await bitrixStore.init();
 
     const { ID: leadId } = bitrixStore.options;
-
-    console.log("checking LeadID", leadId);
-
     const lead = await bitrixStore.methods.getLeadById(leadId as string);
-
-    console.log('checking lead', lead);
 
     if (!lead || !("ufCrm_1773150315164" in lead)) {
       return;
@@ -59,7 +54,7 @@ onUnmounted(() => {
 <template>
   <Suspense>
     <B24App
-      v-if="bitrixStore.isInit && clientStore.clientId"
+      v-if="bitrixStore.isInit || clientStore.clientId || clientStore.client"
       :toaster="toaster"
     >
       <AppHeader />
