@@ -37,7 +37,7 @@ export const useAddyChatStore = defineStore("chats", () => {
         `${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`,
       );
       const { error, data } = await useApi<IApiResponse<IAddyMessageResponse>>(
-        `${API_URL}/user/${clientStore.clientId}/chats?limit=${requestLimit}&page=${requestPage}`,
+        `${API_URL}/bx24/user/${clientStore.clientId}/messages?limit=${requestLimit}&page=${requestPage}`,
         {
           headers: {
             "Content-Type": "application/json",

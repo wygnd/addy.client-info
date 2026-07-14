@@ -25,7 +25,7 @@ export const useClientStore = defineStore("clientInfo", () => {
 
       const auth = btoa(`${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`);
       const { error, data } = await useApi<IApiResponse<IClient>>(
-        `${API_URL}/user/${clientId.value}`,
+        `${API_URL}/bx24/user/${clientId.value}`,
         {
           method: "GET",
           headers: {
