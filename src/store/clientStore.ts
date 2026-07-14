@@ -8,7 +8,7 @@ import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
 export const useClientStore = defineStore("clientInfo", () => {
   const client = ref<IClient | null>(null);
   const clientId = ref<number>(0);
-  const isLoading = ref<boolean>(false);
+  const isLoading = ref<boolean>(true);
   const toast = useToast();
   const parent = ref<IClient | null>(null);
 

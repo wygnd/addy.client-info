@@ -12,7 +12,7 @@ export const useAddyChatStore = defineStore("chats", () => {
   const messages = ref<IAddyMessage[]>([]);
   const currentPage = ref<number>(1);
   const currentLimit = ref<number>(20);
-  const isLoading = ref<boolean>(false);
+  const isLoading = ref<boolean>(true);
   const hasMore = ref<boolean>(true);
   const visitedPages = ref<Set<number>>(new Set<number>());
 

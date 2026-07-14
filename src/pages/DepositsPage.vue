@@ -120,7 +120,7 @@ const clientDepositColumns: TableColumn<IDeposit>[] = [
 
 const table = useTemplateRef("table");
 const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
-  id: true,
+  id: false,
   contract: true,
   amount_without_commission: true,
   amount: true,
@@ -128,7 +128,7 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
   type: true,
   status: true,
   payment_time: true,
-  created_at: true,
+  created_at: false,
 });
 
 const pageTitle = computed<string>(() => {
