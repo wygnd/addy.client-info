@@ -57,7 +57,7 @@ onUnmounted(() => {
       v-if="bitrixStore.isInit || clientStore.clientId || clientStore.client"
       :toaster="toaster"
     >
-      <B24Main as="div" class="min-h-[75dvh]">
+      <B24Main as="div" class="min-h-[90dvh]">
         <B24Container
           class="flex gap-4"
           :b24ui="{
