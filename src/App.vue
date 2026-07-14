@@ -61,7 +61,7 @@ onUnmounted(() => {
         <B24Container
           class="flex gap-4"
           :b24ui="{
-            base: 'max-w-[1800px]',
+            base: 'max-w-[1800px] px-0 sm:px-0 lg:px-0',
           }"
         >
           <AppHeader
@@ -76,13 +76,13 @@ onUnmounted(() => {
       </B24Main>
       <AppFooter />
     </B24App>
-            <B24Error
-              v-else
-              :clear="false"
-              :error="{
-                statusCode: 403,
-                statusMessage: 'Страница не найдена',
-              }"
-            />
+    <B24Error
+      v-else
+      :clear="false"
+      :error="{
+        statusCode: 403,
+        statusMessage: 'Страница не найдена',
+      }"
+    />
   </Suspense>
 </template>

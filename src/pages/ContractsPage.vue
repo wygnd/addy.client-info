@@ -55,7 +55,7 @@ const pageTitle = computed<string>(() => {
 
   <div
     v-if="clientStore.client && !clientStore.isLoading"
-    class="h-200 overflow-y-auto"
+    class="h-180 overflow-y-auto"
   >
     <div v-if="route.query.type === 'reward'">
       <UserContract

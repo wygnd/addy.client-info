@@ -22,7 +22,7 @@ const clientInfoItems = computed<DescriptionListItem[]>(() => {
   <B24PageBody
     class="w-4/6 sticky top-25 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
   >
-    <B24DescriptionList :items="clientInfoItems" />
+    <B24DescriptionList size="sm" :items="clientInfoItems" />
   </B24PageBody>
 </template>
 
