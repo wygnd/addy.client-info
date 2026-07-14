@@ -117,12 +117,13 @@ const handleClickLoginBadge = (event: PointerEvent) => {
     <B24Skeleton class="w-full h-6xl mb-2" />
     <B24Skeleton class="w-full h-6xl mb-2" />
   </div>
-  <B24Table
-    v-if="clientStore.client && !clientStore.isLoading"
-    :data="clientStore.client.accounts"
-    :columns="clientAccountColumns"
-    class="flex-1 mt-8"
-  />
+  <div v-if="clientStore.client && !clientStore.isLoading">
+    <B24Table
+      :data="clientStore.client.accounts"
+      :columns="clientAccountColumns"
+      class="flex-1 mt-8"
+    />
+  </div>
   <B24Empty
     v-else-if="!clientStore.client && !clientStore.isLoading"
     title="Не удалось получить данные о клиенте"

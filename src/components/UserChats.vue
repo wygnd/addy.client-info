@@ -80,7 +80,7 @@ watch(
 </script>
 
 <template>
-  <div ref="scrollRef" class="h-180 overflow-auto">
+  <div ref="scrollRef" class="h-200 overflow-auto">
     <div ref="sentinelRef" class="chat-sentinel" />
 
     <div v-if="!hasMore" class="flex justify-center">

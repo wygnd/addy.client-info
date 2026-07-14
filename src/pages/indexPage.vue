@@ -35,7 +35,9 @@ const clientStore = useClientStore();
     :duration="3"
   />
 
-  <UserInfo v-if="clientStore.client && !clientStore.isLoading" />
+  <div v-if="clientStore.client && !clientStore.isLoading">
+    <UserInfo />
+  </div>
   <B24Empty
     v-else-if="!clientStore.client && !clientStore.isLoading"
     title="Не удалось получить данные"

@@ -107,34 +107,32 @@ const handleUpdateSelectMenu = (id: string) => {
 </script>
 
 <template>
-  <B24Header class="py-10">
-    <template #title>
-      <img
-        loading="lazy"
-        :src="`${publicPath}/assets/images/Logo.svg`"
-        width="120px"
-        alt="logo"
-      />
-    </template>
-    <B24NavigationMenu :items="links" />
-    <template #right>
-      <B24Select
-        v-model="clientChoice"
-        :items="clientAccounts"
-        :loading="clientStore.isLoading"
-        :tag="clientStore.isLoading ? 'Загрузка' : 'Выбор аккаунта'"
-        :color="clientStore.isLoading ? 'air-primary-success' : 'air-primary'"
-        highlight
-        :tag-color="
-          clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
-        "
-        placeholder="Не выбрано"
-        value-key="id"
-        size="lg"
-        @update:modelValue="handleUpdateSelectMenu"
-      />
-    </template>
-  </B24Header>
+  <header>
+    <img
+      loading="lazy"
+      :src="`${publicPath}/assets/images/Logo.svg`"
+      width="120px"
+      alt="logo"
+      class="mb-10"
+    />
+
+    <B24NavigationMenu :items="links" orientation="vertical" class="mb-15" />
+    <B24Select
+      v-model="clientChoice"
+      :items="clientAccounts"
+      :loading="clientStore.isLoading"
+      :tag="clientStore.isLoading ? 'Загрузка' : 'Выбор аккаунта'"
+      :color="clientStore.isLoading ? 'air-primary-success' : 'air-primary'"
+      highlight
+      :tag-color="
+        clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
+      "
+      placeholder="Не выбрано"
+      value-key="id"
+      size="lg"
+      @update:modelValue="handleUpdateSelectMenu"
+    />
+  </header>
 </template>
 
 <style scoped></style>

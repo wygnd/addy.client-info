@@ -52,9 +52,10 @@ const pageTitle = computed<string>(() => {
     text="Загрузка договоров"
     :duration="3"
   />
+
   <div
     v-if="clientStore.client && !clientStore.isLoading"
-    class="h-200 overflow-y-auto mt-0"
+    class="h-200 overflow-y-auto"
   >
     <div v-if="route.query.type === 'reward'">
       <UserContract

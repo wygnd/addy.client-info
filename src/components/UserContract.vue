@@ -27,17 +27,15 @@ const clientContractRequisites = computed<DescriptionListItem[]>(() =>
 </script>
 
 <template>
-  <div class="w-full flex items-start gap-4 relative pr-5">
-    <B24PageBody
-      class="w-[40%] sticky top-5 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-filled-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
-    >
-      <B24DescriptionList :items="clientContractData" class="h-fit" />
-    </B24PageBody>
-    <B24PageBody
+  <div class="w-full flex items-start gap-4 relative pr-5 mt-5">
+    <B24DescriptionList
+      :items="clientContractData"
+      class="w-[40%] h-fit sticky top-5 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-filled-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
+    />
+    <B24DescriptionList
+      :items="clientContractRequisites"
       class="w-3/5 sticky top-25 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
-    >
-      <B24DescriptionList :items="clientContractRequisites" />
-    </B24PageBody>
+    />
   </div>
 </template>
 
