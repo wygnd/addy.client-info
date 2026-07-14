@@ -5,7 +5,7 @@ const bitrixStore = useBitrixStore();
 </script>
 
 <template>
-  <B24Footer class="mt-10">
+  <B24Footer>
     <template #left>
       <ProseP small accent="less" class="mb-0">
         Создано с помощью Bitrix24 UI • &copy; {{ new Date().getFullYear() }}
