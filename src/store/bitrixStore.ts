@@ -51,7 +51,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
       await $logger.debug("Check options", options.value);
 
       // Масштабируем фрейм под размеры приложения
-      await $bx24.parent.resizeWindowAuto(null, 780, 1000);
+      await $bx24.parent.resizeWindowAuto(null, 900, 1000);
 
       await $logger.notice("Инициализация успешно выполнена");
       isInit.value = true;
