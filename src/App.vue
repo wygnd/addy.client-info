@@ -21,7 +21,11 @@ onMounted(async () => {
 
     const { ID: leadId } = bitrixStore.options;
 
+    console.log("checking LeadID", leadId);
+
     const lead = await bitrixStore.methods.getLeadById(leadId as string);
+
+    console.log('checking lead', lead);
 
     if (!lead || !("ufCrm_1773150315164" in lead)) {
       return;

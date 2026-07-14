@@ -181,7 +181,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
       return null;
     }
 
-    const result = await $bx24.actions.v2.call.make<B24Lead>({
+    const result = await $bx24.actions.v2.call.make<{ item: B24Lead }>({
       method: "crm.item.get",
       params: {
         entityTypeId: 1,
@@ -204,10 +204,14 @@ export const useBitrixStore = defineStore("bitrix24", () => {
     }
 
     if (Array.isArray(data.result)) {
-      return data.result[0] as B24Lead;
+      return data.result[0].item as B24Lead;
     }
 
-    return data.result as B24Lead;
+    if (!("item" in data.result)) {
+      return null;
+    }
+
+    return data.result.item;
   };
 
   const findDealsByPhone = async (
