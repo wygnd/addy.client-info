@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import UserInfo from "../components/UserInfo.vue";
 import { useClientStore } from "../store/clientStore.ts";
+import { formatClientName } from "../utils/mappers";
+import { computed } from "vue";
 
 const clientStore = useClientStore();
+
+const clientFullName = computed(() => formatClientName(clientStore.client));
 </script>
 
 <template>
@@ -10,7 +14,7 @@ const clientStore = useClientStore();
     <ProseH1>
       {{
         clientStore.client && !clientStore.isLoading
-          ? `Клиент: ${clientStore.client.name} ${clientStore.client.lastname}`
+          ? `Клиент: ${clientFullName}`
           : "Клиент"
       }}
     </ProseH1>

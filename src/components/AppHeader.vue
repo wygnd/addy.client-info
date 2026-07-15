@@ -3,6 +3,7 @@ import type { NavigationMenuItem, SelectItem } from "@bitrix24/b24ui-nuxt";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useClientStore } from "../store/clientStore.ts";
+import { formatClientName } from "../utils/mappers";
 
 const publicPath = import.meta.env.VITE_PUBLIC_URL;
 
@@ -47,7 +48,7 @@ const clientAccounts = computed<SelectItem[]>(() => {
 
   if (clientStore.client.parent_id && clientStore.parent) {
     items.push({
-      label: `${clientStore.parent.name} ${clientStore.parent.lastname}`,
+      label: formatClientName(clientStore.parent),
       id: clientStore.parent.id.toString(),
     });
 
@@ -58,7 +59,7 @@ const clientAccounts = computed<SelectItem[]>(() => {
     if ("childs" in clientStore.parent) {
       for (const child of clientStore.parent.childs) {
         items.push({
-          label: `${child.name} ${child.lastname}`,
+          label: formatClientName(child),
           id: child.id.toString(),
         });
       }
@@ -67,7 +68,7 @@ const clientAccounts = computed<SelectItem[]>(() => {
     return items;
   }
 
-  const clientFullName = `${clientStore.client.name} ${clientStore.client.lastname}`;
+  const clientFullName = formatClientName(clientStore.client);
 
   clientChoice.value = {
     label: clientFullName,
@@ -86,7 +87,7 @@ const clientAccounts = computed<SelectItem[]>(() => {
   if (clientStore.client.childs && clientStore.client.childs.length > 0) {
     for (const child of clientStore.client.childs) {
       items.push({
-        label: `${child.name} ${child.lastname}`,
+        label: formatClientName(child),
         id: child.id.toString(),
       });
     }

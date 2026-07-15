@@ -43,7 +43,7 @@ onMounted(async () => {
     await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 
-  clientStore.setClientId(1);
+  // clientStore.setClientId(1);
 });
 
 onUnmounted(() => {
