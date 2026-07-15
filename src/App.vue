@@ -77,16 +77,16 @@ onUnmounted(() => {
       v-else-if="!bitrixStore.isInit"
       :clear="false"
       :error="{
-        statusCode: 403,
-        statusMessage: 'Страница не найдена',
+        statusMessage: '403',
+        message: 'Страница не найдена',
       }"
     />
     <B24Error
       v-else-if="!clientStore.client"
       :clear="false"
       :error="{
-        statusCode: 404,
-        statusMessage: 'Данные по клиенту не найдены',
+        statusMessage: '404',
+        message: 'Данные по клиенту не найдены',
       }"
     />
   </Suspense>
