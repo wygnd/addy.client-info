@@ -44,7 +44,7 @@ const clientAccountColumns: TableColumn<IAccount>[] = [
     accessorKey: "balance",
     header: ACCOUNT_KEYS_MAP["balance"],
     cell: ({ row }) => {
-      const amount = Number.parseFloat(row.getValue("balance")) / 100;
+      const amount = Number(row.getValue("balance"));
 
       return formatAmount(amount);
     },

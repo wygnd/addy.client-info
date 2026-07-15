@@ -52,11 +52,11 @@ const clientAccounts = computed<SelectItem[]>(() => {
       id: clientStore.parent.id.toString(),
     });
 
-    items.push({
-      type: "separator",
-    });
-
     if ("childs" in clientStore.parent) {
+      items.push({
+        type: "separator",
+      });
+
       for (const child of clientStore.parent.childs) {
         items.push({
           label: formatClientName(child),
@@ -80,11 +80,11 @@ const clientAccounts = computed<SelectItem[]>(() => {
     id: clientStore.client.id.toString(),
   });
 
-  items.push({
-    type: "separator",
-  });
-
   if (clientStore.client.childs && clientStore.client.childs.length > 0) {
+    items.push({
+      type: "separator",
+    });
+
     for (const child of clientStore.client.childs) {
       items.push({
         label: formatClientName(child),

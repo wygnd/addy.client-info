@@ -122,7 +122,7 @@ const table = useTemplateRef("table");
 const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
   id: false,
   contract: true,
-  amount_without_commission: true,
+  amount_without_commission: false,
   amount: true,
   method_type: true,
   type: true,
