@@ -22,7 +22,11 @@ onMounted(async () => {
     const { ID: leadId } = bitrixStore.options;
     const lead = await bitrixStore.methods.getLeadById(leadId as string);
 
-    if (!lead || !("ufCrm_1773150315164" in lead)) {
+    if (
+      !lead ||
+      !("ufCrm_1773150315164" in lead) ||
+      !lead.ufCrm_1773150315164
+    ) {
       return;
     }
 
@@ -90,7 +94,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.clientId || !clientStore.isLoading && !clientStore.client"
+      v-else-if="!clientStore.clientId"
       :clear="false"
       :error="{
         statusMessage: '404',
