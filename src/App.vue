@@ -53,7 +53,15 @@ onUnmounted(() => {
 
 <template>
   <Suspense>
-    <B24App v-if="bitrixStore.isInit && clientStore.client" :toaster="toaster">
+    <B24App
+      v-if="
+        bitrixStore.isInit &&
+        clientStore.clientId &&
+        ((clientStore.isLoading && !clientStore.client) ||
+          (!clientStore.isLoading && clientStore.client))
+      "
+      :toaster="toaster"
+    >
       <B24Main as="div" class="min-h-0">
         <B24Container
           class="flex gap-4"
@@ -82,7 +90,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.client"
+      v-else-if="!clientStore.clientId || !clientStore.isLoading && !clientStore.client"
       :clear="false"
       :error="{
         statusMessage: '404',
