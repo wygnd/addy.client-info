@@ -94,7 +94,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.clientId"
+      v-else-if="!clientStore.clientId && !clientStore.isLoading"
       :clear="false"
       :error="{
         statusMessage: '404',
