@@ -86,7 +86,7 @@ onUnmounted(() => {
       <AppFooter />
     </B24App>
     <B24Error
-      v-else-if="!bitrixStore.isInit"
+      v-else-if="!bitrixStore.isInit && !bitrixStore.isLoading"
       :clear="false"
       :error="{
         statusMessage: '403',

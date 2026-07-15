@@ -34,11 +34,13 @@ export const useBitrixStore = defineStore("bitrix24", () => {
 
   const toast = useToast();
   const isInit = ref<boolean>(false);
+  const isLoading = ref<boolean>(true);
   const options = ref<Record<string, unknown>>({});
 
   const init = async () => {
     try {
       if ($bx24) {
+        isLoading.value = false;
         return;
       }
 
@@ -62,6 +64,8 @@ export const useBitrixStore = defineStore("bitrix24", () => {
         icon: CloudErrorIcon,
       });
       throw e;
+    } finally {
+      isLoading.value = false;
     }
   };
 
@@ -312,6 +316,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
     init,
     destroy,
     isInit,
+    isLoading,
     logger: $logger,
     options,
     methods: {
