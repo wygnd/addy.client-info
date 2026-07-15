@@ -53,9 +53,7 @@ onUnmounted(() => {
 
 <template>
   <Suspense>
-    <B24App
-      :toaster="toaster"
-    >
+    <B24App v-if="bitrixStore.isInit && clientStore.client" :toaster="toaster">
       <B24Main as="div" class="min-h-0">
         <B24Container
           class="flex gap-4"
@@ -75,13 +73,21 @@ onUnmounted(() => {
       </B24Main>
       <AppFooter />
     </B24App>
-<!--    <B24Error-->
-<!--      v-else-->
-<!--      :clear="false"-->
-<!--      :error="{-->
-<!--        statusCode: 403,-->
-<!--        statusMessage: 'Страница не найдена',-->
-<!--      }"-->
-<!--    />-->
+    <B24Error
+      v-else-if="!bitrixStore.isInit"
+      :clear="false"
+      :error="{
+        statusCode: 403,
+        statusMessage: 'Страница не найдена',
+      }"
+    />
+    <B24Error
+      v-else-if="!clientStore.client"
+      :clear="false"
+      :error="{
+        statusCode: 404,
+        statusMessage: 'Данные по клиенту не найдены',
+      }"
+    />
   </Suspense>
 </template>
