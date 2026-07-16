@@ -8,3 +8,5 @@ export interface IMessage {
   role: "user" | "assistant";
   parts: IMessagePart[];
 }
+
+export * from "./jivo";

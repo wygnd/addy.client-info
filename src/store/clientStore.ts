@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { IApiResponse, IClient } from "../types";
+import { IApiAddyResponse, IClient } from "../types";
 import { useApi } from "../composables/useApi.ts";
-import { API_URL } from "../constants/api.ts";
+import { API_ADDY_URL } from "../constants/api.ts";
 import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
 
 export const useClientStore = defineStore("clientInfo", () => {
@@ -24,8 +24,8 @@ export const useClientStore = defineStore("clientInfo", () => {
       }
 
       const auth = btoa(`${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`);
-      const { error, data } = await useApi<IApiResponse<IClient>>(
-        `${API_URL}/bx24/user/${clientId.value}`,
+      const { error, data } = await useApi<IApiAddyResponse<IClient>>(
+        `${API_ADDY_URL}/bx24/user/${clientId.value}`,
         {
           method: "GET",
           headers: {

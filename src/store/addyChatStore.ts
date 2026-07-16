@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-import { IAddyMessage, IApiResponse } from "../types";
+import { IAddyMessage, IApiAddyResponse } from "../types";
 import { ref } from "vue";
 import { useApi } from "../composables/useApi.ts";
-import { API_URL } from "../constants/api.ts";
+import { API_ADDY_URL } from "../constants/api.ts";
 import { useClientStore } from "./clientStore.ts";
 import { IAddyMessageResponse } from "../types/api";
 
@@ -36,8 +36,8 @@ export const useAddyChatStore = defineStore("chats", () => {
       const auth = btoa(
         `${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`,
       );
-      const { error, data } = await useApi<IApiResponse<IAddyMessageResponse>>(
-        `${API_URL}/bx24/user/${clientStore.clientId}/messages?limit=${requestLimit}&page=${requestPage}`,
+      const { error, data } = await useApi<IApiAddyResponse<IAddyMessageResponse>>(
+        `${API_ADDY_URL}/bx24/user/${clientStore.clientId}/messages?limit=${requestLimit}&page=${requestPage}`,
         {
           headers: {
             "Content-Type": "application/json",

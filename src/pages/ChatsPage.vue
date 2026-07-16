@@ -23,7 +23,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 ]);
 
 onMounted(() => {
-  if (addyChatStore.messages.length === 0) {
+  if (route.query.type && route.query.type === "addy") {
     addyChatStore.fetchMessages();
   }
 });
@@ -73,7 +73,7 @@ const pageTitle = computed<string>(() => {
   <div
     class="mb-0 pb-5 flex items-center justify-between gap-5 border-b border-b-(--ui-color-design-outline-stroke)"
   >
-    <ProseH1>{{ pageTitle}}</ProseH1>
+    <ProseH1>{{ pageTitle }}</ProseH1>
 
     <B24NavigationMenu
       :items="items"
@@ -96,9 +96,11 @@ const pageTitle = computed<string>(() => {
       />
     </div>
 
-    <ProseP v-if="route.query.type === 'jivo'">(JIVO) Coming soon...</ProseP>
+    <div v-if="route.query.type === 'jivo'">
+      <JivoChats />
+    </div>
 
-    <ProseH4 v-if="!route.query.type"> Чтобы продолжить, Выберите чат </ProseH4>
+    <ProseP v-if="!route.query.type"> Чтобы продолжить, Выберите чат </ProseP>
   </B24PageBody>
 </template>
 
