@@ -15,21 +15,22 @@ const clientInfoItems = computed<DescriptionListItem[]>(() => {
   }
 
   const items = mapClientInfo(clientStore.client);
+  let hasRewardContracts = false;
 
   if (
     "rewardContracts" in clientStore.client &&
     clientStore.client.rewardContracts
   ) {
-    return [
-      {
-        label: "Договор на вознаграждение",
-        description: "Есть",
-      },
-      ...items,
-    ];
+    hasRewardContracts = true;
   }
 
-  return items;
+  return [
+    {
+      label: "Договор на вознаграждение",
+      description: hasRewardContracts ? "Есть" : "Нет",
+    },
+    ...items,
+  ];
 });
 </script>
 
@@ -39,7 +40,8 @@ const clientInfoItems = computed<DescriptionListItem[]>(() => {
       size="sm"
       :items="clientInfoItems"
       :b24ui="{
-        container: 'rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)',
+        container:
+          'rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)',
         label: 'px-5',
         description: 'px-5',
       }"
