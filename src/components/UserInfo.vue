@@ -14,15 +14,36 @@ const clientInfoItems = computed<DescriptionListItem[]>(() => {
     return [];
   }
 
-  return mapClientInfo(clientStore.client);
+  const items = mapClientInfo(clientStore.client);
+
+  if (
+    "rewardContracts" in clientStore.client &&
+    clientStore.client.rewardContracts
+  ) {
+    return [
+      {
+        label: "Договор на вознаграждение",
+        description: "Есть",
+      },
+      ...items,
+    ];
+  }
+
+  return items;
 });
 </script>
 
 <template>
-  <B24PageBody
-    class="w-4/6 sticky top-25 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
-  >
-    <B24DescriptionList size="sm" :items="clientInfoItems" />
+  <B24PageBody class="w-3/6 p-0">
+    <B24DescriptionList
+      size="sm"
+      :items="clientInfoItems"
+      :b24ui="{
+        container: 'rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)',
+        label: 'px-5',
+        description: 'px-5',
+      }"
+    />
   </B24PageBody>
 </template>
 

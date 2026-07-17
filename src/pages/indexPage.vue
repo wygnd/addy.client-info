@@ -10,8 +10,8 @@ const clientFullName = computed(() => formatClientName(clientStore.client));
 </script>
 
 <template>
-  <div>
-    <ProseH1>
+  <div class="mb-0 flex items-start justify-between gap-15">
+    <ProseH1 class="shrink-0 w-1/3">
       {{
         clientStore.client && !clientStore.isLoading
           ? `Клиент: ${clientFullName}`

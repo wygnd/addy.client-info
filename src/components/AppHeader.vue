@@ -118,25 +118,29 @@ const handleUpdateSelectMenu = (id: string) => {
     />
 
     <B24NavigationMenu :items="links" orientation="vertical" class="mb-15" />
-    <B24Select
-      v-model="clientChoice"
-      :items="clientAccounts"
-      :loading="clientStore.isLoading"
-      :tag="clientStore.isLoading ? 'Загрузка' : 'Выбор аккаунта'"
-      :color="clientStore.isLoading ? 'air-primary-success' : 'air-primary'"
-      highlight
-      :tag-color="
-        clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
-      "
-      placeholder="Не выбрано"
-      underline
-      value-key="id"
-      @update:modelValue="handleUpdateSelectMenu"
-      :b24ui="{
-        root: 'w-full',
-        tag: 'left-0 right-auto top-[-20px]',
-      }"
-    />
+
+    <div v-if="clientStore.client">
+      <B24Select
+        v-model="clientChoice"
+        :items="clientAccounts"
+        :loading="clientStore.isLoading"
+        :tag="clientStore.isLoading ? 'Загрузка' : 'Выбор аккаунта'"
+        :color="clientStore.isLoading ? 'air-primary-success' : 'air-primary'"
+        highlight
+        :tag-color="
+          clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
+        "
+        :disabled="clientStore.client.childs.length === 0"
+        placeholder="Не выбрано"
+        underline
+        value-key="id"
+        @update:modelValue="handleUpdateSelectMenu"
+        :b24ui="{
+          root: 'w-full',
+          tag: 'left-0 right-auto top-[-20px]',
+        }"
+      />
+    </div>
   </header>
 </template>
 

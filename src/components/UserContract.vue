@@ -31,12 +31,28 @@ const clientContractRequisites = computed<DescriptionListItem[]>(() =>
     <B24DescriptionList
       size="sm"
       :items="clientContractData"
-      class="w-[40%] h-fit sticky top-5 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-filled-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
+      class="w-[40%] h-fit sticky top-5 p-0"
+      :b24ui="{
+        container:
+          'm-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-filled-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)',
+        label: 'px-5',
+        description: 'px-5',
+        labelWrapper:
+          'sm:border-(--ui-color-design-filled-stroke) border-(--ui-color-design-filled-stroke)',
+        descriptionWrapper:
+          'sm:border-(--ui-color-design-filled-stroke) border-(--ui-color-design-filled-stroke)',
+      }"
     />
     <B24DescriptionList
       size="sm"
       :items="clientContractRequisites"
-      class="w-3/5 sticky top-25 px-5 pb-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)"
+      class="w-3/5 sticky top-25 p-0"
+      :b24ui="{
+        container:
+          'm-0 rounded-(--ui-border-radius-md) border-(--ui-color-design-outline-stroke) border-(length:--ui-design-outline-stroke-weight) text-(--ui-color-design-outline-content)',
+        label: 'px-5',
+        description: 'px-5',
+      }"
     />
   </div>
 </template>
