@@ -89,11 +89,6 @@ const pageTitle = computed<string>(() => {
         :loading="addyChatStore.isLoading"
         @loadMore="handleLoadMoreAddyMessages"
       />
-      <B24ChatShimmer
-        v-if="addyChatStore.messages.length === 0 && !addyChatStore.isLoading"
-        text="Не удалось получить сообщения"
-        :duration="0"
-      />
     </div>
 
     <div v-if="route.query.type === 'jivo'">

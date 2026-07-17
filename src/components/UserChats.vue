@@ -83,8 +83,12 @@ watch(
   <div ref="scrollRef" class="h-165 overflow-auto">
     <div ref="sentinelRef" class="chat-sentinel" />
 
-    <div v-if="!hasMore" class="flex justify-center">
+    <div v-if="!hasMore && messages.length > 0" class="flex justify-center">
       <B24ChatShimmer text="Сообщений больше нет" :duration="0" />
+    </div>
+
+    <div v-if="messages.length === 0" class="flex justify-center">
+      <B24ChatShimmer text="Сообщений пока нет..." :duration="0" />
     </div>
 
     <div v-if="loading" class="flex justify-center">

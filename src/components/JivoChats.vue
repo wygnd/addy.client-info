@@ -63,12 +63,10 @@ const handleLoadMoreMessages = () => {
 </script>
 
 <template>
-  <div class="flex justify-between">
+  <div v-if="jivoChatStore.chats.items.length > 0" class="flex justify-between">
     <div class="w-full">
       <div v-if="!selectedChatId">
-        <ProseP>
-          Чтобы продолжить, Выберите чат
-        </ProseP>
+        <ProseP> Чтобы продолжить, Выберите чат </ProseP>
       </div>
       <UserChats
         v-if="selectedChatId"
@@ -83,6 +81,10 @@ const handleLoadMoreMessages = () => {
       orientation="vertical"
       class="w-1/5 border-l border-l-(--ui-color-design-outline-stroke) min-h-50 ml-10 pl-10 shrink-0"
     />
+  </div>
+
+  <div v-else class="flex justify-center">
+    <B24ChatShimmer text="Сообщений пока нет..." :duration="0" />
   </div>
 </template>
 
