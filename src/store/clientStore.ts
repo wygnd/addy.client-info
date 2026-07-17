@@ -23,7 +23,7 @@ export const useClientStore = defineStore("clientInfo", () => {
         isLoading.value = true;
       }
 
-      const auth = btoa(`${import.meta.env.VITE_BACKEND_API_USERNAME}:${import.meta.env.VITE_BACKEND_API_PASSWORD}`);
+      const auth = btoa(`${import.meta.env.VITE_ADDY_BACKEND_API_USERNAME}:${import.meta.env.VITE_ADDY_BACKEND_API_PASSWORD}`);
       const { error, data } = await useApi<IApiAddyResponse<IClient>>(
         `${API_ADDY_URL}/bx24/user/${clientId.value}`,
         {

@@ -36,7 +36,10 @@ export const useAddyChatStore = defineStore("chats", () => {
       const auth = btoa(
         `${import.meta.env.VITE_ADDY_BACKEND_API_USERNAME}:${import.meta.env.VITE_ADDY_BACKEND_API_PASSWORD}`,
       );
-      const { error, data } = await useApi<IApiAddyResponse<IAddyMessageResponse>>(
+
+      const { error, data } = await useApi<
+        IApiAddyResponse<IAddyMessageResponse>
+      >(
         `${API_ADDY_URL}/bx24/user/${clientStore.clientId}/messages?limit=${requestLimit}&page=${requestPage}`,
         {
           headers: {
