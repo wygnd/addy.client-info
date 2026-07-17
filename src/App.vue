@@ -101,5 +101,15 @@ onUnmounted(() => {
         message: 'Данные по клиенту не найдены',
       }"
     />
+    <B24Error
+      v-else-if="
+        clientStore.clientId && !clientStore.isLoading && clientStore.isLoading
+      "
+      :clear="false"
+      :error="{
+        statusMessage: '404',
+        message: 'Не удалось получить данные',
+      }"
+    />
   </Suspense>
 </template>
