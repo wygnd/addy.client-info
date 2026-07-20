@@ -20,3 +20,14 @@ export type TDepositType =
   | "ACCRUE_REWARD"
   | "TRANSPORT"
   | "WITHDRAWAL";
+
+export type TBitrixPauseDepositType =
+  | "days_since_ad_account_funded"
+  | "days_since_addy_funded";
+
+export interface IBitrixPauseDeposit {
+  id: number;
+  clientExternalId: number;
+  depositType: TBitrixPauseDepositType;
+  recordedAt: string;
+}
