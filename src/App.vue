@@ -39,6 +39,8 @@ onMounted(async () => {
       return;
     }
 
+    console.log(lead.ufCrm_1773150315164);
+
     clientStore.setClientId(parseInt(lead.ufCrm_1773150315164 as string));
   } catch (e) {
     let messageError = "Неизвестная ошибка";
