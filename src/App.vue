@@ -3,10 +3,13 @@ import { onMounted, onUnmounted } from "vue";
 import { LoggerInterface, SdkError } from "@bitrix24/b24jssdk";
 import { useBitrixStore } from "./store/bitrixStore.ts";
 import { useClientStore } from "./store/clientStore.ts";
+import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
 
 const { isBitrixMobile } = useDevice();
 const bitrixStore = useBitrixStore();
 const clientStore = useClientStore();
+const toast = useToast();
+
 const toaster = {
   position: isBitrixMobile.value ? "bottom-center" : "top-right",
   duration: 3000,
@@ -27,6 +30,12 @@ onMounted(async () => {
       !("ufCrm_1773150315164" in lead) ||
       !lead.ufCrm_1773150315164
     ) {
+      toast.add({
+        title: "Не удалось получить ID клиента",
+        description: "Проверьте указан ли ID клиента в карточке лида",
+        color: "air-primary-alert",
+        icon: CloudErrorIcon,
+      });
       return;
     }
 
@@ -92,7 +101,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.isLoading && !clientStore.clientId"
+      v-else-if="!bitrixStore.isLoading && !clientStore.clientId"
       :clear="false"
       :error="{
         statusMessage: '404',
