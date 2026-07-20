@@ -68,7 +68,9 @@ onUnmounted(() => {
   <Suspense>
     <B24App
       v-if="
-        clientStore.clientId || bitrixStore.isLoading || clientStore.isLoading
+        clientStore.clientId !== 0 ||
+        bitrixStore.isLoading ||
+        clientStore.isLoading
       "
       :toaster="toaster"
     >
@@ -92,7 +94,7 @@ onUnmounted(() => {
       <AppFooter />
     </B24App>
     <B24Error
-      v-else-if="!bitrixStore.isLoading && !bitrixStore.isInit"
+      v-else-if="!bitrixStore.isInit"
       :clear="false"
       :error="{
         statusMessage: '403',
@@ -100,17 +102,15 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!bitrixStore.isLoading && !clientStore.clientId"
+      v-else-if="!clientStore.clientId"
       :clear="false"
       :error="{
-        statusMessage: '404',
+        statusMessage: '400',
         message: 'Данные по клиенту не найдены',
       }"
     />
     <B24Error
-      v-else-if="
-        clientStore.clientId && !clientStore.isLoading && !clientStore.client
-      "
+      v-else-if="!clientStore.client"
       :clear="false"
       :error="{
         statusMessage: '404',
