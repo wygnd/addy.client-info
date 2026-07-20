@@ -23,7 +23,11 @@ const items = computed<NavigationMenuItem[]>(() => [
 ]);
 
 onMounted(() => {
-  if (route.query.type && route.query.type === "addy") {
+  if (
+    route.query.type &&
+    route.query.type === "addy" &&
+    addyChatStore.hasMore
+  ) {
     addyChatStore.fetchMessages();
   }
 });
