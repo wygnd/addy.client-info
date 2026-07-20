@@ -92,7 +92,7 @@ onUnmounted(() => {
       <AppFooter />
     </B24App>
     <B24Error
-      v-else-if="!bitrixStore.isInit"
+      v-else-if="!bitrixStore.isLoading && !bitrixStore.isInit"
       :clear="false"
       :error="{
         statusMessage: '403',
@@ -100,7 +100,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.clientId"
+      v-else-if="!clientStore.isLoading && !clientStore.clientId"
       :clear="false"
       :error="{
         statusMessage: '400',
@@ -108,7 +108,7 @@ onUnmounted(() => {
       }"
     />
     <B24Error
-      v-else-if="!clientStore.client"
+      v-else-if="!clientStore.isLoading && !clientStore.client"
       :clear="false"
       :error="{
         statusMessage: '404',
