@@ -69,7 +69,8 @@ onUnmounted(() => {
     <B24App
       v-if="
         (bitrixStore.isInit && clientStore.clientId) ||
-        (clientStore.isLoading && !clientStore.client)
+        bitrixStore.isLoading ||
+        clientStore.isLoading
       "
       :toaster="toaster"
     >
