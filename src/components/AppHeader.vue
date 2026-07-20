@@ -130,7 +130,7 @@ const handleUpdateSelectMenu = (id: string) => {
         :tag-color="
           clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
         "
-        :disabled="clientStore.client.childs.length === 0"
+        :disabled="!clientStore.parent && clientStore.client.childs.length === 0"
         placeholder="Не выбрано"
         underline
         value-key="id"
