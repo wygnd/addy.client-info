@@ -120,7 +120,9 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
 
 <template>
   <B24Card
-    v-if="clientStore.client && !clientStore.isLoading"
+    v-if="
+      clientStore.client && !clientStore.isLoading && clientStore.client.deposit
+    "
     variant="outline"
     class="flex-1 w-full mt-8"
     :b24ui="{
