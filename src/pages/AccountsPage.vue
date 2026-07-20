@@ -120,14 +120,23 @@ const handleClickLoginBadge = (event: PointerEvent) => {
   />
   <div v-if="clientStore.client && !clientStore.isLoading">
     <B24Table
+      v-if="clientStore.client.accounts.length > 0"
       :data="clientStore.client.accounts"
       :columns="clientAccountColumns"
       class="flex-1 mt-8"
     />
+    <B24ChatShimmer
+      v-else
+      class="flex items-start justify-center mt-2xl"
+      text="Ничего не найдено..."
+      :duration="0"
+    />
   </div>
-  <B24Empty
-    v-else-if="!clientStore.client && !clientStore.isLoading"
-    title="Не удалось получить данные о клиенте"
+  <B24ChatShimmer
+    v-else
+    class="flex items-start justify-center mt-2xl"
+    text="Ничего не найдено..."
+    :duration="0"
   />
 </template>
 
