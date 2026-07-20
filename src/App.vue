@@ -69,11 +69,7 @@ onUnmounted(() => {
 <template>
   <Suspense>
     <B24App
-      v-if="
-        clientStore.clientId !== 0 ||
-        bitrixStore.isLoading ||
-        clientStore.isLoading
-      "
+      v-if="clientStore.clientId !== 0 && clientStore.client"
       :toaster="toaster"
     >
       <B24Main as="div" class="min-h-0">
