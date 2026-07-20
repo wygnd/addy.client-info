@@ -74,5 +74,9 @@ export const useClientStore = defineStore("clientInfo", () => {
     });
   };
 
-  return { clientId, client, isLoading, setClientId, parent };
+  const setLoading = (flag: boolean) => {
+    isLoading.value = flag;
+  }
+
+  return { clientId, client, isLoading, setClientId, parent, setLoading };
 });

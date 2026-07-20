@@ -36,6 +36,8 @@ onMounted(async () => {
         color: "air-primary-alert",
         icon: CloudErrorIcon,
       });
+
+      clientStore.setLoading(false);
       return;
     }
 
