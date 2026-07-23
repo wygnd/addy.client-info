@@ -22,28 +22,52 @@ onMounted(async () => {
   try {
     await bitrixStore.init();
 
-    const { ID: leadId } = bitrixStore.options;
-    const lead = await bitrixStore.methods.getLeadById(leadId as string);
+    const { ID: entityId, URI: entityURI } = bitrixStore.options;
+    let clientId: number = 0;
 
-    if (
-      !lead ||
-      !("ufCrm_1773150315164" in lead) ||
-      !lead.ufCrm_1773150315164
-    ) {
-      toast.add({
-        title: "Не удалось получить ID клиента",
-        description: "Проверьте указан ли ID клиента в карточке лида",
-        color: "air-primary-alert",
-        icon: CloudErrorIcon,
-      });
+    if ((entityURI as string).includes("crm/lead/details")) {
+      const lead = await bitrixStore.methods.getLeadById(entityId as string);
 
-      clientStore.setLoading(false);
-      return;
+      if (
+        !lead ||
+        !("ufCrm_1773150315164" in lead) ||
+        !lead.ufCrm_1773150315164
+      ) {
+        toast.add({
+          title: "Не удалось получить ID клиента",
+          description: "Проверьте указан ли ID клиента в карточке лида",
+          color: "air-primary-alert",
+          icon: CloudErrorIcon,
+        });
+
+        clientStore.setLoading(false);
+        return;
+      }
+
+      clientId = parseInt(lead.ufCrm_1773150315164 as string);
+    } else if ((entityURI as string).includes("crm/deal/details")) {
+      const deal = await bitrixStore.methods.getDealById(entityId as string);
+
+      if (!deal || !("ufCrm_1780986634" in deal) || !deal.ufCrm_1780986634) {
+        toast.add({
+          title: "Не удалось получить ID клиента",
+          description: "Проверьте указан ли ID клиента в карточке сделки",
+          color: "air-primary-alert",
+          icon: CloudErrorIcon,
+        });
+
+        clientStore.setLoading(false);
+        return;
+      }
+
+      clientId = parseInt(deal.ufCrm_1780986634 as string);
     }
 
-    console.log(lead.ufCrm_1773150315164);
+    if (!clientId) {
+      throw new Error("Не удалось получить ID клиента");
+    }
 
-    clientStore.setClientId(parseInt(lead.ufCrm_1773150315164 as string));
+    clientStore.setClientId(clientId);
   } catch (e) {
     let messageError = "Неизвестная ошибка";
     let loggerType: keyof LoggerInterface = "error";
@@ -60,7 +84,7 @@ onMounted(async () => {
     await bitrixStore.logger[loggerType](messageError, { error: e });
   }
 
-  // clientStore.setClientId(1);
+  // clientStore.setClientId(7);
 });
 
 onUnmounted(() => {
@@ -106,8 +130,8 @@ onUnmounted(() => {
       :clear="false"
       :error="{
         statusMessage: '400',
-        message: 'Данные по клиенту не найдены. Проверьте, указан ли ID клиента в карточке лида',
-
+        message:
+          'Данные по клиенту не найдены. Проверьте, указан ли ID клиента в карточке лида',
       }"
     />
     <B24Error

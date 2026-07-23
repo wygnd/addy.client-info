@@ -15,7 +15,6 @@ export const useClientStore = defineStore("clientInfo", () => {
 
   const fetchClientById = async (force: boolean = false): Promise<void> => {
     try {
-      console.log(force);
       isLoading.value = true;
       if (!clientId.value) {
         throw new Error("clientId is empty");

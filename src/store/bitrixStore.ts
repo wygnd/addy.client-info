@@ -218,6 +218,44 @@ export const useBitrixStore = defineStore("bitrix24", () => {
     return data.result.item;
   };
 
+  const getDealById = async (dealId: string): Promise<B24Deal | null> => {
+    if (!$bx24) {
+      return null;
+    }
+
+    const result = await $bx24.actions.v2.call.make<{ item: B24Deal }>({
+      method: "crm.item.get",
+      params: {
+        entityTypeId: 2,
+        id: dealId,
+      },
+    });
+
+    if (!result.isSuccess) {
+      await $logger.error(`Ошибка получения сделки ${dealId}`, {
+        error: result.getErrorMessages(),
+      });
+
+      return null;
+    }
+
+    const data = result.getData();
+
+    if (!data?.result) {
+      return null;
+    }
+
+    if (Array.isArray(data.result)) {
+      return data.result[0].item as B24Deal;
+    }
+
+    if (!("item" in data.result)) {
+      return null;
+    }
+
+    return data.result.item;
+  };
+
   const findDealsByPhone = async (
     phone: string | string[],
   ): Promise<B24Deal[]> => {
@@ -329,6 +367,7 @@ export const useBitrixStore = defineStore("bitrix24", () => {
       findDealsByPhone,
       generateDealUrl,
       getLeadById,
+      getDealById,
     },
   };
 });

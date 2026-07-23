@@ -1,4 +1,5 @@
 export * from "./lead/type.ts";
+export * from "./deal/type.ts";
 
 export type TB24Color =
   | "air-primary"
