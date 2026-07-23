@@ -4,6 +4,7 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useClientStore } from "../store/clientStore.ts";
 import { formatClientName } from "../utils/mappers";
+import RefreshIcon from "@bitrix24/b24icons-vue/solid/RefreshIcon";
 
 const publicPath = import.meta.env.VITE_PUBLIC_URL;
 
@@ -105,17 +106,37 @@ const handleUpdateSelectMenu = (id: string) => {
 
   clientStore.setClientId(ID);
 };
+
+const handleClickRefreshButton = async () => {
+  if (clientStore.parent) {
+    clientStore.setClientId(clientStore.parent.id, true);
+
+    return;
+  }
+
+  clientStore.setClientId(clientStore.clientId, true);
+};
 </script>
 
 <template>
   <header>
-    <img
-      loading="lazy"
-      :src="`${publicPath}/assets/images/Logo.svg`"
-      width="120px"
-      alt="logo"
-      class="mb-10"
-    />
+    <div class="flex justify-between items-center gap-2 mb-10">
+      <img
+        loading="lazy"
+        :src="`${publicPath}/assets/images/Logo.svg`"
+        width="120px"
+        alt="logo"
+      />
+      <B24Button
+        :icon="RefreshIcon"
+        :loading="clientStore.isLoading"
+        :disabled="!clientStore.clientId"
+        size="md"
+        color="air-secondary-no-accent"
+        title="Обновить информацию о пользователе"
+        @click="handleClickRefreshButton"
+      />
+    </div>
 
     <B24NavigationMenu :items="links" orientation="vertical" class="mb-15" />
 
@@ -130,7 +151,9 @@ const handleUpdateSelectMenu = (id: string) => {
         :tag-color="
           clientStore.isLoading ? 'air-primary-success' : 'air-secondary'
         "
-        :disabled="!clientStore.parent && clientStore.client.childs.length === 0"
+        :disabled="
+          !clientStore.parent && clientStore.client.childs.length === 0
+        "
         placeholder="Не выбрано"
         underline
         value-key="id"

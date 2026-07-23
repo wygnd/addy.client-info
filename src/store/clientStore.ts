@@ -4,6 +4,7 @@ import { IApiAddyResponse, IClient } from "../types";
 import { useApi } from "../composables/useApi.ts";
 import { API_ADDY_URL } from "../constants/api.ts";
 import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
+import SuccessIcon from '@bitrix24/b24icons-vue/button/SuccessIcon'
 
 export const useClientStore = defineStore("clientInfo", () => {
   const client = ref<IClient | null>(null);
@@ -12,8 +13,9 @@ export const useClientStore = defineStore("clientInfo", () => {
   const toast = useToast();
   const parent = ref<IClient | null>(null);
 
-  const fetchClientById = async (): Promise<void> => {
+  const fetchClientById = async (force: boolean = false): Promise<void> => {
     try {
+      console.log(force);
       isLoading.value = true;
       if (!clientId.value) {
         throw new Error("clientId is empty");
@@ -23,18 +25,23 @@ export const useClientStore = defineStore("clientInfo", () => {
         isLoading.value = true;
       }
 
-      const auth = btoa(`${import.meta.env.VITE_ADDY_BACKEND_API_USERNAME}:${import.meta.env.VITE_ADDY_BACKEND_API_PASSWORD}`);
-      const { error, data } = await useApi<IApiAddyResponse<IClient>>(
-        `${API_ADDY_URL}/bx24/user/${clientId.value}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Basic ${auth}`,
-          },
-        },
+      let url = `${API_ADDY_URL}/bx24/user/${clientId.value}`;
+      const auth = btoa(
+        `${import.meta.env.VITE_ADDY_BACKEND_API_USERNAME}:${import.meta.env.VITE_ADDY_BACKEND_API_PASSWORD}`,
       );
+
+      if (force) {
+        url += "?force=true";
+      }
+
+      const { error, data } = await useApi<IApiAddyResponse<IClient>>(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Basic ${auth}`,
+        },
+      });
 
       if (error) {
         throw new Error(error);
@@ -48,6 +55,14 @@ export const useClientStore = defineStore("clientInfo", () => {
         parent.value = client.value;
       }
       client.value = data.resource;
+
+      if (force) {
+        toast.add({
+          title: "Данные успешно обновлены",
+          color: "air-primary-success",
+          icon: SuccessIcon,
+        });
+      }
     } catch (err) {
       throw err;
     } finally {
@@ -55,10 +70,10 @@ export const useClientStore = defineStore("clientInfo", () => {
     }
   };
 
-  const setClientId = (id: number) => {
+  const setClientId = (id: number, force: boolean = false) => {
     clientId.value = id;
 
-    fetchClientById().catch((err) => {
+    fetchClientById(force).catch((err) => {
       let errMessage = "Непредвиденная ошибка";
 
       if (err instanceof Error) {
@@ -76,7 +91,14 @@ export const useClientStore = defineStore("clientInfo", () => {
 
   const setLoading = (flag: boolean) => {
     isLoading.value = flag;
-  }
+  };
 
-  return { clientId, client, isLoading, setClientId, parent, setLoading };
+  return {
+    clientId,
+    client,
+    isLoading,
+    setClientId,
+    parent,
+    setLoading,
+  };
 });
