@@ -3,7 +3,7 @@ import { TBitrixPauseDepositType, TDepositType } from "../../../types";
 export const formatDepositType = (value: TDepositType): string => {
   switch (value) {
     case "ACCOUNT_DEPOSIT":
-      return "Пополнение аккаунта";
+      return "Пополнение кабинета";
 
     case "AD_ACCOUNT_DEPOSIT":
       return "Пополнение рекламной системы";
