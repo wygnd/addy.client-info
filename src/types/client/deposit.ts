@@ -20,7 +20,8 @@ export type TDepositType =
   | "AD_ACCOUNT_DEPOSIT"
   | "ACCRUE_REWARD"
   | "TRANSPORT"
-  | "WITHDRAWAL";
+  | "WITHDRAWAL"
+  | "REFUND_BANK_ACCOUNT";
 
 export type TBitrixPauseDepositType =
   | "days_since_ad_account_funded"
