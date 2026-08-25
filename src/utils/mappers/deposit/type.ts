@@ -5,6 +5,18 @@ export const formatDepositType = (value: TDepositType): string => {
     case "ACCOUNT_DEPOSIT":
       return "Пополнение аккаунта";
 
+    case "AD_ACCOUNT_DEPOSIT":
+      return "Пополнение рекламной системы";
+
+    case "ACCRUE_REWARD":
+      return "Начисление вознаграждения";
+
+    case "TRANSPORT":
+      return "Перечисление денег";
+
+    case "WITHDRAWAL":
+      return "Вывод средств";
+
     default:
       return "Не определено";
   }
