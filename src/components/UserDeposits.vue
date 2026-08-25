@@ -12,6 +12,7 @@ import { DEPOSIT_CONFIG } from "../constants/deposit.ts";
 import {
   formatAmount,
   formatDate,
+  formatDepositAdSystem,
   formatDepositMethodType,
   formatDepositStatus,
   formatDepositType,
@@ -94,6 +95,13 @@ const clientDepositColumns: TableColumn<IDeposit>[] = [
     },
   },
   {
+    accessorKey: "ad_system",
+    header: DEPOSIT_CONFIG["ad_system"]?.label,
+    cell: ({ row }) => {
+      return formatDepositAdSystem(row.getValue("ad_system") as string);
+    },
+  },
+  {
     accessorKey: "created_at",
     header: DEPOSIT_CONFIG["created_at"]?.label,
     cell: ({ row }) => {
@@ -114,6 +122,7 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
   type: true,
   status: true,
   payment_time: true,
+  ad_system: true,
   created_at: false,
 });
 </script>

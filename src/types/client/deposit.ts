@@ -8,6 +8,7 @@ export interface IDeposit {
   method_type: TDepositMethodType;
   payment_time: string;
   created_at: string;
+  ad_system?: string;
 }
 
 export type TDepositStatus = "COMPLETED" | "PENDING" | "FAIL" | "FROZEN";

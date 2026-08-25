@@ -5,6 +5,7 @@ import {
   formatDepositType,
   formatDepositMethodType,
   formatDepositStatus,
+  formatDepositAdSystem,
 } from "../utils/mappers";
 
 export const DEPOSIT_CONFIG: TFieldConfig<IDeposit> = {
@@ -20,4 +21,5 @@ export const DEPOSIT_CONFIG: TFieldConfig<IDeposit> = {
   type: { label: "Тип", format: formatDepositType },
   status: { label: "Статус", format: formatDepositStatus },
   method_type: { label: "Тип метод", format: formatDepositMethodType },
+  ad_system: { label: "Рекламная система", format: formatDepositAdSystem },
 };
