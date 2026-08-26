@@ -1,82 +1,88 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useClientStore } from "./clientStore.ts";
+import { IApiAddyResponse, IDeposit } from "../types";
+import {
+  API_ADDY_URL,
+  API_AUTH_KEY,
+  API_LIMIT_POSTS,
+} from "../constants/api.ts";
 import { useApi } from "../composables/useApi.ts";
-import { IBitrixPauseDeposit } from "../types";
-import { IApiBitrixPaginationResponse } from "../types/api";
-import { API_BITRIX_URL } from "../constants/api.ts";
+import { IAddyListResponse } from "../types/api/addy/response.ts";
+import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
 
 export const useDepositStore = defineStore("depositStore", () => {
-  const clientStore = useClientStore();
+  const depositVisitedSet = new Set<number>();
+  const depositList = ref<IDeposit[]>([]);
+  const isLoading = ref<boolean>(false);
+  const toast = useToast();
+  const canLoadMore = ref<boolean>(true);
+  const currentPage = ref<number>(0);
 
-  const items = ref<IBitrixPauseDeposit[]>([]);
-  const currentPage = ref<number>(1);
-  const currentLimit = ref<number>(20);
-  const isLoading = ref<boolean>(true);
-  const hasMore = ref<boolean>(true);
-  const visitedPages = ref<Set<number>>(new Set<number>());
-
-  const fetchHistory = async (limit?: number, page?: number) => {
+  const fetchDeposits = async (clientId: number): Promise<void> => {
+    isLoading.value = true;
     try {
-      isLoading.value = true;
-      const requestLimit = limit ? limit : currentLimit.value;
-      let requestPage = page ? page : currentPage.value;
+      currentPage.value += 1;
+      const params = new URLSearchParams({
+        page: currentPage.value.toString(),
+        limit: API_LIMIT_POSTS.toString(),
+      });
 
-      while (true) {
-        if (visitedPages.value.has(requestPage)) {
-          requestPage += 1;
-          continue;
-        }
+      const url =
+        API_ADDY_URL +
+        `/bx24/user/${clientId}/transactions?${params.toString()}`;
 
-        break;
-      }
-
-      visitedPages.value.add(requestPage);
-
-      const { error, data } = await useApi<
-        IApiBitrixPaginationResponse<IBitrixPauseDeposit[]>
-      >(
-        `${API_BITRIX_URL}/v1/integration/addy/clients/${clientStore.clientId}/deposits/history?limit=${requestLimit}&page=${requestPage}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `baa ${import.meta.env.VITE_BITRIX_BACKEND_API_KEY}`,
-          },
+      const { data, error } = await useApi<
+        IApiAddyResponse<IAddyListResponse<IDeposit[]>>
+      >(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${API_AUTH_KEY}`,
         },
-      );
+      });
 
       if (error) {
         throw new Error(error);
       }
 
       if (!data) {
-        throw new Error("Не удалось получить данные. Ответ пустой");
+        throw new Error("Не удалось получить данные");
       }
 
-      if (data.totalRows === 0) {
-        hasMore.value = false;
+      for (const deposit of data.resource.data) {
+        if (depositVisitedSet.has(deposit.id)) {
+          continue;
+        }
+
+        depositList.value.push(deposit);
       }
 
-      currentPage.value = requestPage;
-      currentLimit.value = requestLimit;
+      if (data.resource.meta.current_page === data.resource.meta.last_page) {
+        canLoadMore.value = false;
+      }
+    } catch (error) {
+      let errorMessage = "Непредвиденная ошбика";
 
-      items.value.push(...data.result);
-    } catch (err) {
-      throw err;
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      toast.add({
+        title: "Ошибка получения транзакций",
+        description: errorMessage,
+        color: "air-primary-alert",
+        icon: CloudErrorIcon,
+      });
     } finally {
       isLoading.value = false;
     }
   };
 
   return {
-    items,
-    isLoading,
-    hasMore,
-    fetchHistory,
-    pagination: {
-      page: currentPage,
-      limit: currentLimit,
-    },
+    deposits: depositList,
+    fetchDeposits: fetchDeposits,
+    loading: isLoading,
+    canLoadMore: canLoadMore,
   };
 });

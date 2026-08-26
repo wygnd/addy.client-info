@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { IApiAddyResponse, IClient } from "../types";
 import { useApi } from "../composables/useApi.ts";
-import { API_ADDY_URL } from "../constants/api.ts";
+import { API_ADDY_URL, API_AUTH_KEY } from "../constants/api.ts";
 import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
-import SuccessIcon from '@bitrix24/b24icons-vue/button/SuccessIcon'
+import SuccessIcon from "@bitrix24/b24icons-vue/button/SuccessIcon";
 
 export const useClientStore = defineStore("clientInfo", () => {
   const client = ref<IClient | null>(null);
@@ -25,9 +25,6 @@ export const useClientStore = defineStore("clientInfo", () => {
       }
 
       let url = `${API_ADDY_URL}/bx24/user/${clientId.value}`;
-      const auth = btoa(
-        `${import.meta.env.VITE_ADDY_BACKEND_API_USERNAME}:${import.meta.env.VITE_ADDY_BACKEND_API_PASSWORD}`,
-      );
 
       if (force) {
         url += "?force=true";
@@ -38,7 +35,7 @@ export const useClientStore = defineStore("clientInfo", () => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Basic ${auth}`,
+          Authorization: `Basic ${API_AUTH_KEY}`,
         },
       });
 

@@ -6,9 +6,10 @@ export interface IDeposit {
   amount_without_commission: number;
   amount: number;
   method_type: TDepositMethodType;
-  payment_time: string;
+  payment_time?: string;
   created_at: string;
   ad_system?: string;
+  classifier: TDepositClassifier;
 }
 
 export type TDepositStatus = "COMPLETED" | "PENDING" | "FAIL" | "FROZEN";
@@ -21,6 +22,7 @@ export type TDepositType =
   | "ACCRUE_REWARD"
   | "TRANSPORT"
   | "WITHDRAWAL"
+  | "REFUND_ACCOUNT_DEPOSIT"
   | "REFUND_BANK_ACCOUNT";
 
 export type TBitrixPauseDepositType =
@@ -33,3 +35,5 @@ export interface IBitrixPauseDeposit {
   depositType: TBitrixPauseDepositType;
   recordedAt: string;
 }
+
+export type TDepositClassifier = 'OUTCOME' |'INCOME';

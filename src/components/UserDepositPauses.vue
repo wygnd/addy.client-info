@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useDepositStore } from "../store/depositStore.ts";
+import { useDepositPauseStore } from "../store/depositPauseStore.ts";
 import { computed, onMounted } from "vue";
 import { DescriptionListItem } from "@bitrix24/b24ui-nuxt";
 import { formatPauseDepositType } from "../utils/mappers";
 
-const depositStore = useDepositStore();
+const depositStore = useDepositPauseStore();
 
 const items = computed<DescriptionListItem[]>(() =>
   depositStore.items.map((item) => ({

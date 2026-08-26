@@ -2,23 +2,28 @@
 import { TableColumn } from "@bitrix24/b24ui-nuxt";
 import {
   IDeposit,
+  TDepositClassifier,
   TDepositMethodType,
   TDepositStatus,
   TDepositType,
 } from "../types";
-import { h, ref, resolveComponent, useTemplateRef } from "vue";
+import { h, onMounted, ref, resolveComponent, useTemplateRef } from "vue";
 import { useClientStore } from "../store/clientStore.ts";
 import { DEPOSIT_CONFIG } from "../constants/deposit.ts";
 import {
   formatAmount,
+  formatClassifier,
   formatDate,
   formatDepositAdSystem,
   formatDepositMethodType,
   formatDepositStatus,
   formatDepositType,
 } from "../utils/mappers";
+import { useDepositStore } from "../store/depositStore.ts";
+import { useInfiniteScroll } from "@vueuse/core";
 
 const clientStore = useClientStore();
+const depositStore = useDepositStore();
 
 const B24Badge = resolveComponent("B24Badge");
 
@@ -86,10 +91,23 @@ const clientDepositColumns: TableColumn<IDeposit>[] = [
     },
   },
   {
+    accessorKey: "classifier",
+    header: DEPOSIT_CONFIG["classifier"]?.label,
+    cell: ({ row }) => {
+      const value = row.getValue("classifier") as TDepositClassifier;
+
+      return formatClassifier(value);
+    },
+  },
+  {
     accessorKey: "payment_time",
     header: DEPOSIT_CONFIG["payment_time"]?.label,
     cell: ({ row }) => {
-      const date = row.getValue("payment_time") as string;
+      let date = row.getValue("payment_time") as string;
+
+      if (!date) {
+        date = row.getValue("created_at") as string;
+      }
 
       return formatDate(date);
     },
@@ -124,18 +142,31 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
   payment_time: true,
   ad_system: true,
   created_at: false,
+  classifier: false,
+});
+
+onMounted(async () => {
+  if (depositStore.deposits.length === 0) {
+    await depositStore.fetchDeposits(clientStore.clientId);
+  }
+
+  useInfiniteScroll(
+    table.value?.$el,
+    () => {
+      depositStore.fetchDeposits(clientStore.clientId);
+    },
+    {
+      distance: 10,
+      canLoadMore: () => {
+        return depositStore.canLoadMore;
+      },
+    },
+  );
 });
 </script>
 
 <template>
   <B24Card
-    v-if="
-      clientStore.client &&
-      !clientStore.isLoading &&
-      'deposit' in clientStore.client &&
-      Array.isArray(clientStore.client.deposit) &&
-      clientStore.client.deposit.length > 0
-    "
     variant="outline"
     class="flex-1 w-full mt-8"
     :b24ui="{
@@ -178,17 +209,14 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
     </template>
     <B24Table
       ref="table"
+      sticky
+      :loading="depositStore.loading"
+      class="flex-1 max-h-122.5"
       v-model:column-visibility="columnVisibility"
-      :data="clientStore.client.deposit"
+      :data="depositStore.deposits"
       :columns="clientDepositColumns"
     />
   </B24Card>
-  <B24ChatShimmer
-    v-else
-    class="flex items-start justify-center mt-2xl"
-    text="Ничего не найдено..."
-    :duration="0"
-  />
 </template>
 
 <style scoped></style>

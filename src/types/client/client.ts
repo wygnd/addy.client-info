@@ -1,6 +1,5 @@
 import { IAccount } from "./account.ts";
 import { IContract } from "./contract.ts";
-import { IDeposit } from "./deposit.ts";
 
 interface IClientInfo {
   id: number;
@@ -17,7 +16,6 @@ interface IClientInfo {
   ad_account_deposited_at: string | null;
   rewardContracts?: IContract;
   tags: IClientTag[];
-  deposit?: IDeposit[];
 }
 
 export interface IClient extends IClientInfo {

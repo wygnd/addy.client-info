@@ -18,7 +18,10 @@ export const formatDepositType = (value: TDepositType): string => {
       return "Вывод средств";
 
     case "REFUND_BANK_ACCOUNT":
-      return "Возврат";
+      return "Возврат на р/с";
+
+    case "REFUND_ACCOUNT_DEPOSIT":
+      return "Возврат в личный кабинет";
 
     default:
       return "Не определено";
