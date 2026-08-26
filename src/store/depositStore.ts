@@ -74,6 +74,8 @@ export const useDepositStore = defineStore("depositStore", () => {
         color: "air-primary-alert",
         icon: CloudErrorIcon,
       });
+
+      canLoadMore.value = false;
     } finally {
       isLoading.value = false;
     }
