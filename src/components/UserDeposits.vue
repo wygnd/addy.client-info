@@ -146,14 +146,22 @@ const columnVisibility = ref<Record<keyof IDeposit, boolean>>({
 });
 
 onMounted(async () => {
+  const clientId = clientStore.client
+    ? clientStore.client.parent_id
+    : clientStore.clientId;
+
+  if (!clientId) {
+    return;
+  }
+
   if (depositStore.deposits.length === 0) {
-    await depositStore.fetchDeposits(clientStore.clientId);
+    await depositStore.fetchDeposits(clientId);
   }
 
   useInfiniteScroll(
     table.value?.$el,
     () => {
-      depositStore.fetchDeposits(clientStore.clientId);
+      depositStore.fetchDeposits(clientId);
     },
     {
       distance: 10,
