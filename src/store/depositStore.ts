@@ -18,10 +18,18 @@ export const useDepositStore = defineStore("depositStore", () => {
   const canLoadMore = ref<boolean>(true);
   const currentPage = ref<number>(0);
 
-  const fetchDeposits = async (clientId: number): Promise<void> => {
+  const fetchDeposits = async (
+    clientId: number,
+    reset: boolean = false,
+  ): Promise<void> => {
     isLoading.value = true;
     try {
       currentPage.value += 1;
+
+      if (reset) {
+        currentPage.value = 1;
+      }
+
       const params = new URLSearchParams({
         page: currentPage.value.toString(),
         limit: API_LIMIT_POSTS.toString(),
@@ -48,6 +56,11 @@ export const useDepositStore = defineStore("depositStore", () => {
 
       if (!data) {
         throw new Error("Не удалось получить данные");
+      }
+
+      if (reset) {
+        depositVisitedSet.clear();
+        depositList.value = [];
       }
 
       for (const deposit of data.resource.data) {

@@ -5,6 +5,7 @@ import { useApi } from "../composables/useApi.ts";
 import { API_ADDY_URL, API_AUTH_KEY } from "../constants/api.ts";
 import CloudErrorIcon from "@bitrix24/b24icons-vue/main/CloudErrorIcon";
 import SuccessIcon from "@bitrix24/b24icons-vue/button/SuccessIcon";
+import { useDepositStore } from "./depositStore.ts";
 
 export const useClientStore = defineStore("clientInfo", () => {
   const client = ref<IClient | null>(null);
@@ -12,6 +13,7 @@ export const useClientStore = defineStore("clientInfo", () => {
   const isLoading = ref<boolean>(true);
   const toast = useToast();
   const parent = ref<IClient | null>(null);
+  const depositStore = useDepositStore();
 
   const fetchClientById = async (force: boolean = false): Promise<void> => {
     try {
@@ -78,6 +80,20 @@ export const useClientStore = defineStore("clientInfo", () => {
 
       toast.add({
         title: `Ошибка получения данных клиента: ${clientId.value}`,
+        description: errMessage,
+        color: "air-primary-alert",
+        icon: CloudErrorIcon,
+      });
+    });
+
+    depositStore.fetchDeposits(clientId.value, true).catch((err) => {
+      let errMessage = "Непредвиденная ошибка";
+
+      if (err instanceof Error) {
+        errMessage = err.message;
+      }
+      toast.add({
+        title: `Ошибка получения пополнений: ${clientId.value}`,
         description: errMessage,
         color: "air-primary-alert",
         icon: CloudErrorIcon,

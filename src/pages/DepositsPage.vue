@@ -3,9 +3,11 @@ import { computed } from "vue";
 import { NavigationMenuItem } from "@bitrix24/b24ui-nuxt";
 import { useRoute } from "vue-router";
 import { useClientStore } from "../store/clientStore.ts";
+import { useDepositStore } from "../store/depositStore.ts";
 
 const route = useRoute();
 const clientStore = useClientStore();
+const depositStore = useDepositStore();
 
 const items = computed<NavigationMenuItem[]>(() => [
   {
@@ -47,13 +49,6 @@ const pageTitle = computed<string>(() => {
     />
   </div>
 
-  <B24ChatShimmer
-    v-if="clientStore.isLoading"
-    class="flex items-start justify-center mt-8xl"
-    text="Загрузка финансов"
-    :duration="3"
-  />
-
   <B24PageBody class="w-full m-0 pb-0">
     <div v-if="route.query.type === 'deposits'">
       <UserDeposits />
@@ -65,6 +60,13 @@ const pageTitle = computed<string>(() => {
       Чтобы продолжить, выберите вкладку
     </ProseH4>
   </B24PageBody>
+
+  <B24ChatShimmer
+    v-if="clientStore.isLoading && depositStore.loading"
+    class="flex items-start justify-center mt-8xl"
+    text="Загрузка финансов"
+    :duration="3"
+  />
 </template>
 
 <style scoped></style>
